@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Channel Fusion — Case study — Hari Rajashekar</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #1C2317;
+    --bg-raised: #222A1C;
+    --bg-card: #242C1E;
+    --bg-inset: #161C12;
+    --line: #34402C;
+    --line-soft: #283220;
+    --text: #EDE6DA;
+    --text-mid: #B4B29E;
+    --text-dim: #7D7C68;
+    --text-faint: #525442;
+    --accent: #D4A72C;
+    --accent-dim: #9A7A1C;
+
+    --serif: "Instrument Serif", "Times New Roman", serif;
+    --sans: "DM Sans", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+
+    --page-max: 1280px;
+    --page-pad: clamp(24px, 4vw, 64px);
+    --read-col: 680px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "ss01","ss02";
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--accent); color: #1C2317; }
+  a { color: inherit; text-decoration: none; }
+
+  .shell {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding-left: var(--page-pad);
+    padding-right: var(--page-pad);
+  }
+  .rule { height:1px; background: var(--line-soft); border:0; margin:0; }
+
+  .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 400;
+  }
+
+  /* ————— nav ————— */
+  .nav {
+    position: sticky; top:0; z-index: 50;
+    background: color-mix(in oklab, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 240ms ease;
+  }
+  .nav.is-stuck { border-bottom-color: var(--line-soft); }
+  .nav-inner { display:flex; align-items:center; justify-content:space-between; padding: 20px 0; }
+  .nav-mark { display:inline-flex; align-items:center; gap:10px; font-size:14px; font-weight:500; letter-spacing:-0.01em; white-space:nowrap; }
+  .nav-mark .mark-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 3px color-mix(in oklab, var(--accent) 22%, transparent); }
+  .nav-links { display:flex; gap: 32px; align-items: center; font-size: 14px; color: var(--text-mid); }
+  .nav-links a { transition: color 180ms ease; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { color: var(--text); border:1px solid var(--line); padding:8px 14px; border-radius:999px; font-size:13px; white-space: nowrap; transition: border-color 180ms ease, background 180ms ease; }
+  .nav-cta:hover { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 8%, transparent); }
+  @media (max-width: 720px) { .nav-links a:not(.nav-cta) { display: none; } }
+
+  /* ————— breadcrumb ————— */
+  .crumb {
+    padding-top: 40px;
+    padding-bottom: 32px;
+  }
+  .crumb a {
+    font-size: 13px;
+    color: var(--text-mid);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 180ms ease;
+  }
+  .crumb a:hover { color: var(--accent); }
+
+  /* ————— reading frame: margin + column ————— */
+  .frame {
+    display: grid;
+    grid-template-columns: 96px minmax(0, var(--read-col)) 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .margin-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--text-faint);
+    padding-top: 10px;
+    position: sticky;
+    top: 96px;
+  }
+  .col { min-width: 0; }
+
+  @media (max-width: 900px) {
+    .frame { grid-template-columns: 1fr; gap: 12px; }
+    .margin-num { position: static; padding-top: 0; }
+  }
+
+  /* ————— header block ————— */
+  .header-block { padding-top: 16px; padding-bottom: clamp(64px, 10vh, 112px); }
+  .header-label { margin-bottom: 28px; display: inline-flex; align-items: center; gap: 10px; }
+  .header-label .dot { width:6px; height:6px; border-radius:50%; background: var(--accent); display:inline-block; }
+
+  .header-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(64px, 10vw, 136px);
+    line-height: 0.96;
+    letter-spacing: -0.02em;
+    margin: 0 0 28px;
+    max-width: 14ch;
+  }
+  .header-sub {
+    font-family: var(--sans);
+    font-size: clamp(20px, 1.8vw, 26px);
+    line-height: 1.45;
+    color: var(--text-mid);
+    margin: 0 0 40px;
+    max-width: 48ch;
+    font-weight: 300;
+  }
+  .header-sub .em { color: var(--accent); font-style: italic; font-family: var(--serif); font-size: 1.08em; }
+  .header-meta {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--text-dim);
+    max-width: 56ch;
+  }
+  .header-meta .k { color: var(--text-faint); }
+  .header-meta .sep { margin: 0 10px; color: var(--text-faint); }
+
+  /* ————— metrics strip ————— */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .metric {
+    padding: 36px 28px 36px 0;
+    border-right: 1px solid var(--line-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .metric:not(:first-child) { padding-left: 28px; }
+  .metric:last-child { border-right: 0; }
+  .metric-v {
+    font-family: var(--serif);
+    font-size: clamp(56px, 6vw, 80px);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .metric-v .accent { color: var(--accent); font-style: italic; }
+  .metric-k {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  @media (max-width: 720px) {
+    .metrics { grid-template-columns: 1fr; }
+    .metric { border-right: 0; border-bottom: 1px solid var(--line-soft); padding: 24px 0; }
+    .metric:not(:first-child) { padding-left: 0; }
+    .metric:last-child { border-bottom: 0; }
+  }
+
+  /* ————— section ————— */
+  .section { padding-top: clamp(72px, 10vh, 120px); padding-bottom: 0; }
+  .section-last { padding-bottom: clamp(72px, 10vh, 120px); }
+  .h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(36px, 4.4vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    margin: 0 0 32px;
+    max-width: 20ch;
+  }
+  .h2 .it { font-style: italic; }
+
+  .prose p {
+    font-size: 17.5px;
+    line-height: 1.7;
+    color: var(--text);
+    margin: 0 0 1.3em;
+    max-width: 65ch;
+  }
+  .prose p.quiet { color: var(--text-mid); }
+  .prose p em { font-style: italic; color: var(--text); }
+
+  /* TL;DR */
+  .tldr {
+    padding: 28px 32px;
+    border-left: 2px solid var(--accent);
+    background: color-mix(in oklab, var(--accent) 4%, transparent);
+    margin-bottom: 0;
+  }
+  .tldr .tldr-label { margin-bottom: 14px; }
+  .tldr p {
+    font-family: var(--serif);
+    font-size: clamp(22px, 2.2vw, 28px);
+    line-height: 1.35;
+    color: var(--text);
+    margin: 0;
+    letter-spacing: -0.005em;
+    max-width: 42ch;
+  }
+  .tldr p em { font-style: italic; color: var(--accent); }
+
+  /* Bullet list */
+  .bl {
+    list-style: none;
+    padding: 0;
+    margin: 28px 0 0;
+    max-width: 65ch;
+    border-top: 1px solid var(--line-soft);
+  }
+  .bl li {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--text);
+  }
+  .bl li .idx {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    padding-top: 3px;
+  }
+
+  /* Callout */
+  .callout {
+    margin: 36px 0 0;
+    padding: 28px 32px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-card);
+    max-width: 65ch;
+  }
+  .callout .cl-label { margin-bottom: 12px; }
+  .callout p {
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.4;
+    margin: 0;
+    color: var(--text);
+    letter-spacing: -0.005em;
+  }
+  .callout p .accent { color: var(--accent); font-style: italic; }
+
+  /* Image slot (placeholder) */
+  .figure {
+    margin: 40px 0 12px;
+    max-width: 920px; /* breaks out of reading column */
+  }
+  .figure-frame {
+    background:
+      linear-gradient(135deg, #2C3A23 0%, #1F2A19 100%);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    aspect-ratio: 16 / 9;
+    position: relative;
+    overflow: hidden;
+  }
+  .figure-frame::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, transparent 0 10px, rgba(212,167,44,0.035) 10px 11px);
+  }
+  .figure-frame .fig-mark {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    font-family: var(--serif); font-style: italic; font-size: 44px; color: var(--accent-dim);
+    letter-spacing: -0.01em;
+  }
+  .figure-frame .fig-corner {
+    position: absolute; top: 14px; left: 16px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .figure-cap {
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  /* Code block */
+  .code {
+    margin: 32px 0 0;
+    background: var(--bg-inset);
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    padding: 22px 24px;
+    overflow-x: auto;
+    max-width: 780px;
+  }
+  .code .code-label {
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .code pre {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .code .tok-k { color: var(--accent); }
+  .code .tok-s { color: #B9C2A5; }
+  .code .tok-c { color: var(--text-dim); font-style: italic; }
+  .code .tok-v { color: var(--text-mid); }
+
+  /* Two-column before/after */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 36px;
+    max-width: 920px;
+  }
+  .compare-col {
+    padding: 24px;
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    background: var(--bg-card);
+  }
+  .compare-col.after { border-color: var(--accent-dim); background: color-mix(in oklab, var(--accent) 4%, var(--bg-card)); }
+  .compare-col .cc-label { margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+  .compare-col .cc-body {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.45;
+    color: var(--text);
+  }
+  .compare-col .cc-body em { font-style: italic; color: var(--accent); }
+  @media (max-width: 720px) { .compare { grid-template-columns: 1fr; } }
+
+  /* Chart block */
+  .chart-wrap {
+    margin: 36px 0 0;
+    max-width: 920px;
+    padding: 28px 28px 20px;
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    background: var(--bg-card);
+  }
+  .chart-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 22px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .chart-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    letter-spacing: -0.005em;
+  }
+  .chart-legend { display:flex; gap: 18px; font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; }
+  .chart-legend .sw { display:inline-block; width:10px; height:10px; border-radius: 2px; margin-right:8px; vertical-align: -1px; }
+  .chart svg { display:block; width: 100%; height: auto; }
+
+  /* ————— related work ————— */
+  .related {
+    padding-top: clamp(80px, 12vh, 120px);
+    border-top: 1px solid var(--line-soft);
+    margin-top: clamp(64px, 10vh, 96px);
+  }
+  .related-head {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 48px;
+    align-items: baseline;
+    margin-bottom: 32px;
+  }
+  .related-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .r-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line-soft);
+    border-radius: 12px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: 220px;
+    transition: border-color 200ms ease, background 200ms ease, transform 200ms ease;
+  }
+  .r-card:hover { border-color: var(--accent-dim); background: var(--bg-raised); }
+  .r-card .r-cat { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); }
+  .r-card .r-title { font-family: var(--serif); font-size: clamp(28px, 3vw, 36px); letter-spacing: -0.01em; line-height: 1; margin: 0; }
+  .r-card .r-desc { font-size: 14.5px; color: var(--text-mid); margin: 0; max-width: 40ch; line-height: 1.55; }
+  .r-card .r-link { margin-top: auto; font-size: 13px; color: var(--text); display: inline-flex; align-items: center; gap: 8px; }
+  .r-card:hover .r-link { color: var(--accent); }
+  .r-card .r-link .arrow { transition: transform 180ms ease; }
+  .r-card:hover .r-link .arrow { transform: translateX(3px); }
+  @media (max-width: 720px) { .related-grid { grid-template-columns: 1fr; } .related-head { grid-template-columns: 1fr; gap: 12px; } }
+
+  /* ————— footer CTA ————— */
+  .footer {
+    padding-top: clamp(96px, 14vh, 160px);
+    padding-bottom: 48px;
+    border-top: 1px solid var(--line-soft);
+    margin-top: clamp(64px, 10vh, 96px);
+  }
+  .closer {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(52px, 9vw, 120px);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    margin: 0 0 56px;
+    color: var(--text);
+    max-width: 14ch;
+  }
+  .closer .end { color: var(--accent); }
+  .footer-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .footer-link {
+    padding: 28px 0;
+    border-right: 1px solid var(--line-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-right: 20px;
+    transition: background 180ms ease;
+  }
+  .footer-link:not(:first-child) { padding-left: 24px; }
+  .footer-link:last-child { border-right: 0; }
+  .footer-link:hover { background: color-mix(in oklab, var(--accent) 4%, transparent); }
+  .footer-link:hover .footer-link-label { color: var(--accent); }
+  .footer-link-label { font-family: var(--serif); font-size: clamp(24px, 2.6vw, 32px); letter-spacing: -0.01em; color: var(--text); white-space: nowrap; transition: color 180ms ease; }
+  .footer-link-meta { font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+  .footer-small {
+    margin-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .footer-small-links { display: flex; gap: 28px; white-space: nowrap; }
+  .footer-small-links a:hover { color: var(--accent); }
+  .footer-copy { color: var(--text-faint); white-space: nowrap; }
+  @media (max-width: 720px) {
+    .footer-links { grid-template-columns: 1fr; }
+    .footer-link { border-right: 0; border-bottom: 1px solid var(--line-soft); padding-left: 0 !important; padding-right: 0; }
+    .footer-link:last-child { border-bottom: 0; }
+  }
+
+  /* scroll reveal */
+  .reveal { opacity: 0; transition: opacity 720ms cubic-bezier(.2,.6,.2,1); transition-delay: var(--reveal-delay, 0ms); }
+  .reveal.is-in { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transition: none; } }
+
+</style>
+</head>
+<body>
+
+<!-- nav (matches homepage) -->
+<header class="nav" id="nav">
+  <div class="shell nav-inner">
+    <a href="Portfolio.html" class="nav-mark">
+      <span class="mark-dot"></span>
+      <span>Hari Rajashekar</span>
+    </a>
+    <nav class="nav-links">
+      <a href="Portfolio.html#work">Work</a>
+      <a href="Portfolio.html#about">About</a>
+      <a href="Portfolio.html#contact">Contact</a>
+      <a href="Portfolio.html#contact" class="nav-cta">Book a call</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- breadcrumb -->
+  <div class="shell crumb">
+    <a href="Portfolio.html">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M12 7H2M6 3L2 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      All work
+    </a>
+  </div>
+
+  <!-- ————— HEADER BLOCK ————— -->
+  <section class="shell header-block" data-screen-label="01 Header">
+    <div class="frame">
+      <div class="margin-num">(00)</div>
+      <div class="col">
+        <div class="label header-label reveal">
+          <span class="dot"></span> Case study · 01
+        </div>
+
+        <h1 class="header-title reveal" style="--reveal-delay: 60ms;">Channel <span style="font-style: italic;">Fusion</span></h1>
+
+        <p class="header-sub reveal" style="--reveal-delay: 120ms;">
+          How I sourced <span class="em">$600K</span> in pipeline for an IT MSP in 90 days.
+        </p>
+
+        <div class="header-meta reveal" style="--reveal-delay: 180ms;">
+          <span class="k">Role</span>&nbsp; Solo operator
+          <span class="sep">·</span>
+          <span class="k">Timeline</span>&nbsp; 90 days
+          <span class="sep">·</span>
+          <span class="k">Stack</span>&nbsp; Instantly, n8n, Apify, Claude API, Google Sheets
+        </div>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— METRICS STRIP ————— -->
+  <section class="shell" data-screen-label="02 Metrics">
+    <div class="metrics reveal">
+      <div class="metric">
+        <div class="metric-v"><span class="accent">$</span>600K</div>
+        <div class="metric-k">Pipeline sourced</div>
+      </div>
+      <div class="metric">
+        <div class="metric-v">14</div>
+        <div class="metric-k">Enterprise demos booked</div>
+      </div>
+      <div class="metric">
+        <div class="metric-v">90<span style="font-size: 0.6em; color: var(--text-dim);">d</span></div>
+        <div class="metric-k">Start to first demo</div>
+      </div>
+      <div class="metric">
+        <div class="metric-v">2,400<span style="color: var(--text-dim);">+</span></div>
+        <div class="metric-k">Cold emails sent</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ————— TL;DR ————— -->
+  <section class="shell section" data-screen-label="03 TLDR">
+    <div class="frame">
+      <div class="margin-num">(01)</div>
+      <div class="col">
+        <div class="tldr reveal">
+          <div class="label tldr-label">TL;DR</div>
+          <p>
+            I ran cold outbound for an IT MSP called Channel Fusion. In 90 days, we booked 14 enterprise demos and sourced over <em>$600K</em> in pipeline. The interesting part: the thing that actually worked was the <em>opposite</em> of what most AI outbound playbooks tell you to do.
+          </p>
+        </div>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— THE PROBLEM ————— -->
+  <section class="shell section" data-screen-label="04 Problem">
+    <div class="frame">
+      <div class="margin-num">(02)</div>
+      <div class="col prose">
+        <h2 class="h2 reveal">The <span class="it">problem</span>.</h2>
+        <p class="reveal">
+          Channel Fusion is a mid-market IT managed service provider. Their sales motion was inbound and referrals, which kept the lights on but capped growth. They wanted to add outbound but didn't want to hire an SDR team.
+        </p>
+        <p class="reveal">
+          Cold outbound has a bad reputation for a reason — most of it is terrible. We had 90 days to prove it could work without being spammy.
+        </p>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— CONSTRAINTS ————— -->
+  <section class="shell section" data-screen-label="05 Constraints">
+    <div class="frame">
+      <div class="margin-num">(03)</div>
+      <div class="col prose">
+        <h2 class="h2 reveal">Constraints.</h2>
+        <p class="reveal">
+          No existing outbound infrastructure. Small budget. I was building this solo while also building SpartanFlow. The client's reputation mattered more than short-term volume, so deliverability had to stay clean.
+        </p>
+        <p class="quiet reveal">Three hard limits:</p>
+        <ul class="bl reveal">
+          <li><span class="idx">01</span><span>Budget cap on tooling — roughly $400 / month.</span></li>
+          <li><span class="idx">02</span><span>Emails couldn't sound like templates.</span></li>
+          <li><span class="idx">03</span><span>Couldn't end up on blacklists.</span></li>
+        </ul>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— WHAT I TRIED FIRST ————— -->
+  <section class="shell section" data-screen-label="06 Tried first">
+    <div class="frame">
+      <div class="margin-num">(04)</div>
+      <div class="col prose">
+        <h2 class="h2 reveal">What I tried <span class="it">first</span>.</h2>
+        <p class="reveal">
+          The obvious move was to let GPT write the emails. Give it a lead, give it a persona, give it some product context, and let it generate a personalized email. I built that in n8n in a weekend. It worked — <em>until we actually sent them.</em>
+        </p>
+        <p class="reveal">
+          Reply rates were bad. Open rates were fine. Bounces were fine. But the replies we did get were mostly "please remove me." When I read the emails back, I could tell. They were technically personalized, but they sounded like AI. Everyone's inbox gets 50 of these a day now. Recipients can spot them immediately.
+        </p>
+
+        <aside class="callout reveal">
+          <div class="label cl-label">The lesson</div>
+          <p>LLMs are good at <span class="accent">sounding</span> competent and bad at <span class="accent">sounding</span> human. In cold outbound, the second one is the only one that matters.</p>
+        </aside>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— WHAT ACTUALLY WORKED ————— -->
+  <section class="shell section" data-screen-label="07 What worked">
+    <div class="frame">
+      <div class="margin-num">(05)</div>
+      <div class="col prose">
+        <h2 class="h2 reveal">What <span class="it">actually</span> worked.</h2>
+        <p class="reveal">
+          I rebuilt the whole thing on a boring premise: humans still write better cold emails than LLMs. The LLM's job got downgraded to filling in 2 or 3 specific variables per lead — a casual icebreaker line, the company name stripped of any formal suffixes, and sometimes the city.
+        </p>
+        <p class="reveal">
+          Everything else was hand-written templates with <em>deliberate imperfections</em>. Lowercase subject lines. Short sentences. Comma splices where a human would actually pause.
+        </p>
+
+        <div class="compare reveal">
+          <div class="compare-col">
+            <div class="cc-label">
+              <span class="label">Before · LLM-written</span>
+              <span class="label" style="color: var(--text-faint);">&lt; 1% reply</span>
+            </div>
+            <div class="cc-body">
+              "Hi Sarah, I hope this email finds you well. I came across Channel Fusion and was impressed by your innovative approach to managed IT services. I'd love to explore how we might..."
+            </div>
+          </div>
+          <div class="compare-col after">
+            <div class="cc-label">
+              <span class="label" style="color: var(--accent);">After · human template + vars</span>
+              <span class="label" style="color: var(--accent);">~4–5% reply</span>
+            </div>
+            <div class="cc-body">
+              "sarah — saw <em>{{company}}</em> expanded into <em>{{city}}</em> last quarter. quick question: are you handling helpdesk in-house or contracting it out? have a weird idea that might save you a person."
+            </div>
+          </div>
+        </div>
+
+        <p class="reveal" style="margin-top: 2em;">
+          The variation engine picked which human-written template to use — it didn't generate new ones. That alone changed reply rates. We went from under 1% to around 4–5% on good weeks.
+        </p>
+
+        <div class="code reveal">
+          <div class="code-label">
+            <span class="label">variation-engine.ts</span>
+            <span class="label" style="color: var(--text-faint);">simplified</span>
+          </div>
+<pre><span class="tok-c">// pick a template, not a message. LLM only fills variables.</span>
+<span class="tok-k">const</span> <span class="tok-v">template</span> = pickTemplate(lead.vertical, lead.seniority);
+
+<span class="tok-k">const</span> <span class="tok-v">vars</span> = <span class="tok-k">await</span> claude.fill({
+  template: <span class="tok-v">template</span>.body,
+  need: [<span class="tok-s">'icebreaker'</span>, <span class="tok-s">'company_short'</span>, <span class="tok-s">'city'</span>],
+  lead,
+});
+
+<span class="tok-k">return</span> render(<span class="tok-v">template</span>, <span class="tok-v">vars</span>); <span class="tok-c">// no free-form generation</span></pre>
+        </div>
+
+        <figure class="figure reveal">
+          <div class="figure-frame">
+            <span class="fig-corner">Fig. 01 · pipeline diagram</span>
+            <span class="fig-mark">pipeline</span>
+          </div>
+          <figcaption class="figure-cap">01 · Lead → enrichment → template pick → variable fill → Instantly send</figcaption>
+        </figure>
+
+        <p class="reveal">
+          The second unlock was the sequence structure. I ran three parallel sequences with different angles:
+        </p>
+        <ul class="bl reveal">
+          <li><span class="idx">A</span><span><strong style="font-weight: 500;">Referral ceiling framing.</strong> &nbsp;You've hit the top of what referrals can do.</span></li>
+          <li><span class="idx">B</span><span><strong style="font-weight: 500;">Performance guarantee.</strong> &nbsp;Pay only when it works.</span></li>
+          <li><span class="idx">C</span><span><strong style="font-weight: 500;">Give-first.</strong> &nbsp;I sent a useful report before asking for anything.</span></li>
+        </ul>
+        <p class="reveal" style="margin-top: 2em;">
+          Sequence C outperformed the others on open rate by a wide margin. Turns out leading with something useful works better than leading with an offer. <em>Obvious in hindsight.</em>
+        </p>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— THE NUMBERS ————— -->
+  <section class="shell section" data-screen-label="08 Numbers">
+    <div class="frame">
+      <div class="margin-num">(06)</div>
+      <div class="col prose">
+        <h2 class="h2 reveal">The <span class="it">numbers</span>.</h2>
+        <p class="reveal">
+          Over 90 days, we sent about 2,400 cold emails across the three sequences. Booked 14 demos, most of them enterprise. Pipeline from those demos crossed $600K. The best-performing sequence had a 4.2% reply rate — well above industry average for cold outbound in the MSP space.
+        </p>
+
+        <div class="chart-wrap reveal">
+          <div class="chart-head">
+            <div class="chart-title">Reply rate by sequence</div>
+            <div class="chart-legend">
+              <span><span class="sw" style="background: var(--text-faint);"></span>Industry avg.</span>
+              <span><span class="sw" style="background: var(--accent);"></span>Channel Fusion</span>
+            </div>
+          </div>
+          <div class="chart">
+            <!-- Bar chart, inline SVG -->
+            <svg viewBox="0 0 640 260" role="img" aria-label="Reply rate by sequence bar chart">
+              <!-- gridlines -->
+              <g stroke="#283220" stroke-width="1">
+                <line x1="60" y1="40" x2="620" y2="40"/>
+                <line x1="60" y1="95" x2="620" y2="95"/>
+                <line x1="60" y1="150" x2="620" y2="150"/>
+                <line x1="60" y1="205" x2="620" y2="205"/>
+              </g>
+              <!-- y labels -->
+              <g font-family="JetBrains Mono, monospace" font-size="10" fill="#7D7C68">
+                <text x="50" y="44" text-anchor="end">5%</text>
+                <text x="50" y="99" text-anchor="end">3%</text>
+                <text x="50" y="154" text-anchor="end">1%</text>
+                <text x="50" y="209" text-anchor="end">0</text>
+              </g>
+              <!-- industry avg reference line (~1%) -->
+              <line x1="60" y1="178" x2="620" y2="178" stroke="#525442" stroke-width="1" stroke-dasharray="4 4"/>
+              <text x="616" y="174" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10" fill="#525442">industry avg ~1%</text>
+
+              <!-- bars: A 3.1%, B 2.6%, C 4.2% -->
+              <!-- scale: 5% = from y=205 down to y=40 (165px). 1% = 33px -->
+              <g>
+                <rect x="110" y="103" width="110" height="102" rx="2" fill="#D4A72C" opacity="0.85"/>
+                <rect x="260" y="119" width="110" height="86" rx="2" fill="#D4A72C" opacity="0.7"/>
+                <rect x="410" y="67" width="110" height="138" rx="2" fill="#D4A72C"/>
+              </g>
+              <!-- bar values -->
+              <g font-family="Instrument Serif, serif" font-size="22" fill="#EDE6DA" font-style="italic">
+                <text x="165" y="96" text-anchor="middle">3.1%</text>
+                <text x="315" y="112" text-anchor="middle">2.6%</text>
+                <text x="465" y="60" text-anchor="middle">4.2%</text>
+              </g>
+              <!-- x labels -->
+              <g font-family="JetBrains Mono, monospace" font-size="11" fill="#B4B29E" letter-spacing="1">
+                <text x="165" y="230" text-anchor="middle">SEQ A</text>
+                <text x="315" y="230" text-anchor="middle">SEQ B</text>
+                <text x="465" y="230" text-anchor="middle">SEQ C</text>
+              </g>
+              <g font-family="DM Sans, sans-serif" font-size="11" fill="#7D7C68">
+                <text x="165" y="248" text-anchor="middle">Referral ceiling</text>
+                <text x="315" y="248" text-anchor="middle">Guarantee</text>
+                <text x="465" y="248" text-anchor="middle">Give-first</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— WHAT I'D DO DIFFERENTLY ————— -->
+  <section class="shell section section-last" data-screen-label="09 Differently">
+    <div class="frame">
+      <div class="margin-num">(07)</div>
+      <div class="col prose">
+        <h2 class="h2 reveal">What I'd do <span class="it">differently</span>.</h2>
+        <ul class="bl reveal">
+          <li><span class="idx">01</span><span>Start with Sequence C (give-first) earlier. I spent the first 3 weeks on the offer-led sequences.</span></li>
+          <li><span class="idx">02</span><span>Build the variation engine before the first send. I wrote it during week 5 and wished I had it from day one.</span></li>
+          <li><span class="idx">03</span><span>Talk to the client's existing customers first. The language in the emails improved massively once I interviewed two of their current accounts about why they chose Channel Fusion.</span></li>
+        </ul>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— RELATED WORK ————— -->
+  <section class="shell related" data-screen-label="10 Related">
+    <div class="related-head reveal">
+      <div class="label">(08) &nbsp; Related work</div>
+      <div class="label">Other case studies</div>
+    </div>
+    <div class="related-grid">
+      <a href="#" class="r-card reveal">
+        <div class="r-cat">Voice AI · Case study 02</div>
+        <h3 class="r-title">Barky AI</h3>
+        <p class="r-desc">Voice agent for home service businesses. 23 demos from 100 cold calls.</p>
+        <span class="r-link">Read breakdown
+          <svg class="arrow" width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+      <a href="#" class="r-card reveal" style="--reveal-delay: 80ms;">
+        <div class="r-cat">Personal system · Case study 04</div>
+        <h3 class="r-title">Daily Outreach Agent</h3>
+        <p class="r-desc">A Claude agent that runs my job search every morning. 100% automated.</p>
+        <span class="r-link">Read breakdown
+          <svg class="arrow" width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ————— FOOTER CTA ————— -->
+  <footer class="shell footer" id="contact" data-screen-label="11 Contact">
+    <h2 class="closer reveal">
+      Working on<br/>something<br/>similar<span class="end">?</span>
+    </h2>
+
+    <div class="footer-links reveal" style="--reveal-delay: 80ms;">
+      <a class="footer-link" href="https://cal.com/hari" target="_blank" rel="noopener">
+        <span class="footer-link-label">Book a call</span>
+        <span class="footer-link-meta">Cal.com ↗</span>
+      </a>
+      <a class="footer-link" href="mailto:hari@example.com">
+        <span class="footer-link-label">Email</span>
+        <span class="footer-link-meta">Mail ↗</span>
+      </a>
+      <a class="footer-link" href="#" target="_blank" rel="noopener">
+        <span class="footer-link-label">LinkedIn</span>
+        <span class="footer-link-meta">Profile ↗</span>
+      </a>
+    </div>
+
+    <div class="footer-small">
+      <div class="footer-small-links">
+        <a href="#">GitHub</a>
+        <a href="#">Resume PDF</a>
+      </div>
+      <div class="footer-copy">© 2026 Hari Rajashekar</div>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  // sticky nav hairline
+  (function(){
+    const nav = document.getElementById('nav');
+    const onScroll = () => { if (window.scrollY > 8) nav.classList.add('is-stuck'); else nav.classList.remove('is-stuck'); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+  // reveals
+  (function(){
+    const els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('is-in')); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('is-in'); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    els.forEach(e => io.observe(e));
+  })();
+</script>
+
+</body>
+</html>
