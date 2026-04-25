@@ -1,0 +1,5 @@
+# Source design prototypes dropped at repo root by the design-tool export.
+# The clean production versions live at the root with kebab-case filenames
+# (channel-fusion.html, barky-ai.html, etc.). Source originals are kept
+# locally for reference but excluded from the deploy.
+Case Study - *.html

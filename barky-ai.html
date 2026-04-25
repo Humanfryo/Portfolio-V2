@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Channel Fusion — Case study — Hari Rajashekar</title>
+<title>Barky AI — Case study — Hari Rajashekar</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -509,6 +509,7 @@
   /* scroll reveal */
   .reveal { opacity: 0; transition: opacity 720ms cubic-bezier(.2,.6,.2,1); transition-delay: var(--reveal-delay, 0ms); }
   .reveal.is-in { opacity: 1; }
+  .reveals-off .reveal { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transition: none; } }
 
 </style>
@@ -547,21 +548,21 @@
       <div class="margin-num">(00)</div>
       <div class="col">
         <div class="label header-label reveal">
-          <span class="dot"></span> Case study · 01
+          <span class="dot"></span> Case study · 02
         </div>
 
-        <h1 class="header-title reveal" style="--reveal-delay: 60ms;">Channel <span style="font-style: italic;">Fusion</span></h1>
+        <h1 class="header-title reveal" style="--reveal-delay: 60ms;">Barky <span style="font-style: italic;">AI</span></h1>
 
         <p class="header-sub reveal" style="--reveal-delay: 120ms;">
-          How I sourced <span class="em">$600K</span> in pipeline for an IT MSP in 90 days.
+          How a voice agent for home service businesses booked <span class="em">23</span> demos from 100 cold calls.
         </p>
 
         <div class="header-meta reveal" style="--reveal-delay: 180ms;">
-          <span class="k">Role</span>&nbsp; Solo operator
+          <span class="k">Role</span>&nbsp; Solo build
           <span class="sep">·</span>
-          <span class="k">Timeline</span>&nbsp; 90 days
+          <span class="k">Timeline</span>&nbsp; Ongoing
           <span class="sep">·</span>
-          <span class="k">Stack</span>&nbsp; Instantly, n8n, Apify, Claude API, Google Sheets
+          <span class="k">Stack</span>&nbsp; VAPI, Make.com, Twilio, Claude API
         </div>
       </div>
       <div></div>
@@ -572,20 +573,20 @@
   <section class="shell">
     <div class="metrics reveal">
       <div class="metric">
-        <div class="metric-v"><span class="accent">$</span>600K</div>
-        <div class="metric-k">Pipeline sourced</div>
+        <div class="metric-v">23</div>
+        <div class="metric-k">Demos booked from cold outreach</div>
       </div>
       <div class="metric">
-        <div class="metric-v">14</div>
-        <div class="metric-k">Enterprise demos booked</div>
+        <div class="metric-v">100</div>
+        <div class="metric-k">Calls placed by the agent</div>
       </div>
       <div class="metric">
-        <div class="metric-v">90<span style="font-size: 0.6em; color: var(--text-dim);">d</span></div>
-        <div class="metric-k">Start to first demo</div>
+        <div class="metric-v"><span class="accent">23</span><span style="color: var(--text-dim); font-style: italic;">%</span></div>
+        <div class="metric-k">Conversion to demo</div>
       </div>
       <div class="metric">
-        <div class="metric-v">2,400<span style="color: var(--text-dim);">+</span></div>
-        <div class="metric-k">Cold emails sent</div>
+        <div class="metric-v"><span style="color: var(--text-dim);">&lt;</span>60<span style="font-size: 0.6em; color: var(--text-dim);">s</span></div>
+        <div class="metric-k">Average call length</div>
       </div>
     </div>
   </section>
@@ -598,7 +599,7 @@
         <div class="tldr reveal">
           <div class="label tldr-label">TL;DR</div>
           <p>
-            I ran cold outbound for an IT MSP called Channel Fusion. In 90 days, we booked 14 enterprise demos and sourced over <em>$600K</em> in pipeline. The interesting part: the thing that actually worked was the <em>opposite</em> of what most AI outbound playbooks tell you to do.
+            Barky AI is a voice agent I built for home service businesses — plumbers, HVAC, roofing, the kind of small operators who lose money every time a call goes to voicemail. The interesting part: instead of selling Barky the normal way, I had Barky <em>sell itself</em>. The agent placed its own cold calls and booked 23 demos in a week.
           </p>
         </div>
       </div>
@@ -613,10 +614,10 @@
       <div class="col prose">
         <h2 class="h2 reveal">The <span class="it">problem</span>.</h2>
         <p class="reveal">
-          Channel Fusion is a mid-market IT managed service provider. Their sales motion was inbound and referrals, which kept the lights on but capped growth. They wanted to add outbound but didn't want to hire an SDR team.
+          Home service businesses live and die by inbound calls. A plumber misses a call, the customer hits the next plumber on Google. Most small shops can't afford a full-time receptionist, so they either let calls go to voicemail or pay $200+ a month for an answering service that mostly takes messages.
         </p>
         <p class="reveal">
-          Cold outbound has a bad reputation for a reason — most of it is terrible. We had 90 days to prove it could work without being spammy.
+          The bigger problem on the sales side: this is a hard market to reach. Owners are on rooftops and under sinks, not on LinkedIn. Cold email doesn't work because half of them barely check their inbox. The only channel they actually answer is the phone — <em>which is a problem when you're trying to sell them phone software.</em>
         </p>
       </div>
       <div></div>
@@ -630,13 +631,13 @@
       <div class="col prose">
         <h2 class="h2 reveal">Constraints.</h2>
         <p class="reveal">
-          No existing outbound infrastructure. Small budget. I was building this solo while also building SpartanFlow. The client's reputation mattered more than short-term volume, so deliverability had to stay clean.
+          Built solo, nights and weekends. No marketing budget. The agent had to work end-to-end on its own — answer calls, qualify leads, book demos into a calendar — without me babysitting it. And it had to sound like a person, not the obviously-robotic voice agents most people have already hung up on.
         </p>
         <p class="quiet reveal">Three hard limits:</p>
         <ul class="bl reveal">
-          <li><span class="idx">01</span><span>Budget cap on tooling — roughly $400 / month.</span></li>
-          <li><span class="idx">02</span><span>Emails couldn't sound like templates.</span></li>
-          <li><span class="idx">03</span><span>Couldn't end up on blacklists.</span></li>
+          <li><span class="idx">01</span><span>Per-call cost had to stay under $0.50.</span></li>
+          <li><span class="idx">02</span><span>Latency under 800ms — anything slower and people interrupt the agent.</span></li>
+          <li><span class="idx">03</span><span>Had to handle interruptions and tangents naturally, not robotically.</span></li>
         </ul>
       </div>
       <div></div>
@@ -650,15 +651,15 @@
       <div class="col prose">
         <h2 class="h2 reveal">What I tried <span class="it">first</span>.</h2>
         <p class="reveal">
-          The obvious move was to let GPT write the emails. Give it a lead, give it a persona, give it some product context, and let it generate a personalized email. I built that in n8n in a weekend. It worked — <em>until we actually sent them.</em>
+          First version was the "agent as receptionist" pitch. I built a demo where Barky answered an inbound call, qualified the lead, and booked an appointment. Recorded the demo, made a Loom, started cold emailing plumbers and HVAC companies.
         </p>
         <p class="reveal">
-          Reply rates were bad. Open rates were fine. Bounces were fine. But the replies we did get were mostly "please remove me." When I read the emails back, I could tell. They were technically personalized, but they sounded like AI. Everyone's inbox gets 50 of these a day now. Recipients can spot them immediately.
+          Open rates were okay. Reply rates were almost zero. The few replies I got were variations of "interesting, send more info" — which is the cold email graveyard. The product worked. <em>The motion didn't.</em> I was selling phone software through a channel they don't use.
         </p>
 
         <aside class="callout reveal">
           <div class="label cl-label">The lesson</div>
-          <p>LLMs are good at <span class="accent">sounding</span> competent and bad at <span class="accent">sounding</span> human. In cold outbound, the second one is the only one that matters.</p>
+          <p>Sell people on the <span class="accent">channel</span> they actually answer. For home service operators, that's not email.</p>
         </aside>
       </div>
       <div></div>
@@ -672,73 +673,73 @@
       <div class="col prose">
         <h2 class="h2 reveal">What <span class="it">actually</span> worked.</h2>
         <p class="reveal">
-          I rebuilt the whole thing on a boring premise: humans still write better cold emails than LLMs. The LLM's job got downgraded to filling in 2 or 3 specific variables per lead — a casual icebreaker line, the company name stripped of any formal suffixes, and sometimes the city.
+          The unlock was obvious in hindsight: if Barky is good enough to answer calls <em>for</em> a plumber, it's good enough to make calls <em>for itself</em>.
         </p>
         <p class="reveal">
-          Everything else was hand-written templates with <em>deliberate imperfections</em>. Lowercase subject lines. Short sentences. Comma splices where a human would actually pause.
+          I built a second agent — a sales version — and pointed it at a list of home service businesses pulled from Google Maps. The agent introduced itself, explained what Barky does in two sentences, and asked if they wanted a 15-minute demo. If yes, it offered times and booked them. If no, it ended politely and hung up. No follow-up, no pressure.
         </p>
 
         <div class="compare reveal">
           <div class="compare-col">
             <div class="cc-label">
-              <span class="label">Before · LLM-written</span>
-              <span class="label" style="color: var(--text-faint);">&lt; 1% reply</span>
+              <span class="label">Before · cold email</span>
+              <span class="label" style="color: var(--text-faint);">~0% reply</span>
             </div>
             <div class="cc-body">
-              "Hi Sarah, I hope this email finds you well. I came across Channel Fusion and was impressed by your innovative approach to managed IT services. I'd love to explore how we might..."
+              "Hi — I built a voice agent that answers calls for home service businesses. Would you be open to a 15-minute demo this week?"
             </div>
           </div>
           <div class="compare-col after">
             <div class="cc-label">
-              <span class="label" style="color: var(--accent);">After · human template + vars</span>
-              <span class="label" style="color: var(--accent);">~4–5% reply</span>
+              <span class="label" style="color: var(--accent);">After · the agent sells itself</span>
+              <span class="label" style="color: var(--accent);">~23% book</span>
             </div>
             <div class="cc-body">
-              "sarah — saw <em>{{company}}</em> expanded into <em>{{city}}</em> last quarter. quick question: are you handling helpdesk in-house or contracting it out? have a weird idea that might save you a person."
+              "Hey — this is Barky calling from <em>Barky AI</em>. I'm actually the product. I answer calls for shops like yours when you can't pick up. Want me to book you a 15-minute demo with the founder?"
             </div>
           </div>
         </div>
 
         <p class="reveal" style="margin-top: 2em;">
-          The variation engine picked which human-written template to use — it didn't generate new ones. That alone changed reply rates. We went from under 1% to around 4–5% on good weeks.
+          In a week of intermittent runs, Barky placed about 100 calls and booked 23 demos. The conversion didn't surprise me as much as the <em>reaction</em>. About a third of the people who booked told me, on the demo, that they hadn't realized they were talking to an AI until halfway through the call. That was the actual product demo — the demo was happening to them in real time.
         </p>
 
         <div class="code reveal">
           <div class="code-label">
-            <span class="label">variation-engine.ts</span>
+            <span class="label">barky-sales-agent.ts</span>
             <span class="label" style="color: var(--text-faint);">simplified</span>
           </div>
-<pre><span class="tok-c">// pick a template, not a message. LLM only fills variables.</span>
-<span class="tok-k">const</span> <span class="tok-v">template</span> = pickTemplate(lead.vertical, lead.seniority);
-
-<span class="tok-k">const</span> <span class="tok-v">vars</span> = <span class="tok-k">await</span> claude.fill({
-  template: <span class="tok-v">template</span>.body,
-  need: [<span class="tok-s">'icebreaker'</span>, <span class="tok-s">'company_short'</span>, <span class="tok-s">'city'</span>],
-  lead,
+<pre><span class="tok-c">// the product is the pitch. let the agent do what it does.</span>
+<span class="tok-k">const</span> <span class="tok-v">call</span> = <span class="tok-k">await</span> vapi.dial({
+  number: lead.phone,
+  voice: <span class="tok-s">'barky-v2'</span>,
+  system: <span class="tok-s">'you are barky, calling a home service business.'</span>,
+  tools: [bookDemo, transferToHuman, endCall],
+  maxDuration: <span class="tok-v">180</span>, <span class="tok-c">// hang up at 3 min regardless</span>
 });
 
-<span class="tok-k">return</span> render(<span class="tok-v">template</span>, <span class="tok-v">vars</span>); <span class="tok-c">// no free-form generation</span></pre>
+<span class="tok-k">if</span> (<span class="tok-v">call</span>.outcome === <span class="tok-s">'demo_booked'</span>) {
+  <span class="tok-k">await</span> make.run(<span class="tok-s">'sync-to-calendar'</span>, <span class="tok-v">call</span>.booking);
+}</pre>
         </div>
 
         <figure class="figure reveal">
           <div class="figure-frame">
-            <span class="fig-corner">Fig. 01 · pipeline diagram</span>
-            <span class="fig-mark">pipeline</span>
+            <span class="fig-corner">Fig. 01 · call architecture</span>
+            <span class="fig-mark">architecture</span>
           </div>
-          <figcaption class="figure-cap">01 · Lead → enrichment → template pick → variable fill → Instantly send</figcaption>
+          <figcaption class="figure-cap">01 · Twilio → VAPI → Claude → Make.com (calendar + CRM)</figcaption>
         </figure>
 
         <p class="reveal">
-          The second unlock was the sequence structure. I ran three parallel sequences with different angles:
+          The architecture is simple. Each layer does one job:
         </p>
         <ul class="bl reveal">
-          <li><span class="idx">A</span><span><strong style="font-weight: 500;">Referral ceiling framing.</strong> &nbsp;You've hit the top of what referrals can do.</span></li>
-          <li><span class="idx">B</span><span><strong style="font-weight: 500;">Performance guarantee.</strong> &nbsp;Pay only when it works.</span></li>
-          <li><span class="idx">C</span><span><strong style="font-weight: 500;">Give-first.</strong> &nbsp;I sent a useful report before asking for anything.</span></li>
+          <li><span class="idx">A</span><span><strong style="font-weight: 500;">Twilio.</strong> &nbsp;Actual telephony — placing and receiving calls.</span></li>
+          <li><span class="idx">B</span><span><strong style="font-weight: 500;">VAPI.</strong> &nbsp;Voice layer, handles latency and interruption.</span></li>
+          <li><span class="idx">C</span><span><strong style="font-weight: 500;">Claude.</strong> &nbsp;Conversation logic and tool calls.</span></li>
+          <li><span class="idx">D</span><span><strong style="font-weight: 500;">Make.com.</strong> &nbsp;Orchestration — lists, calendar, follow-ups.</span></li>
         </ul>
-        <p class="reveal" style="margin-top: 2em;">
-          Sequence C outperformed the others on open rate by a wide margin. Turns out leading with something useful works better than leading with an offer. <em>Obvious in hindsight.</em>
-        </p>
       </div>
       <div></div>
     </div>
@@ -751,19 +752,22 @@
       <div class="col prose">
         <h2 class="h2 reveal">The <span class="it">numbers</span>.</h2>
         <p class="reveal">
-          Over 90 days, we sent about 2,400 cold emails across the three sequences. Booked 14 demos, most of them enterprise. Pipeline from those demos crossed $600K. The best-performing sequence had a 4.2% reply rate — well above industry average for cold outbound in the MSP space.
+          100 calls placed. 23 demos booked. Average call length under 60 seconds when the prospect wasn't interested, around 2–3 minutes when they were. Per-call cost averaged <em>$0.31</em> including VAPI, Twilio, and LLM costs. Roughly $1.35 per booked demo, which is absurd compared to any other B2B channel.
+        </p>
+        <p class="reveal">
+          The deeper number: of the 23 demos booked, <em>7 converted to paid pilots</em>. The agent that sold itself paid for the whole build twice over.
         </p>
 
         <div class="chart-wrap reveal">
           <div class="chart-head">
-            <div class="chart-title">Reply rate by sequence</div>
+            <div class="chart-title">Cost per booked demo, by channel</div>
             <div class="chart-legend">
-              <span><span class="sw" style="background: var(--text-faint);"></span>Industry avg.</span>
-              <span><span class="sw" style="background: var(--accent);"></span>Channel Fusion</span>
+              <span><span class="sw" style="background: var(--text-faint);"></span>Typical B2B</span>
+              <span><span class="sw" style="background: var(--accent);"></span>Barky</span>
             </div>
           </div>
           <div class="chart">
-            <svg viewBox="0 0 640 260" role="img" aria-label="Reply rate by sequence bar chart">
+            <svg viewBox="0 0 640 260" role="img" aria-label="Cost per booked demo bar chart">
               <g stroke="#283220" stroke-width="1">
                 <line x1="60" y1="40" x2="620" y2="40"/>
                 <line x1="60" y1="95" x2="620" y2="95"/>
@@ -771,33 +775,31 @@
                 <line x1="60" y1="205" x2="620" y2="205"/>
               </g>
               <g font-family="JetBrains Mono, monospace" font-size="10" fill="#7D7C68">
-                <text x="50" y="44" text-anchor="end">5%</text>
-                <text x="50" y="99" text-anchor="end">3%</text>
-                <text x="50" y="154" text-anchor="end">1%</text>
-                <text x="50" y="209" text-anchor="end">0</text>
+                <text x="50" y="44" text-anchor="end">$400</text>
+                <text x="50" y="99" text-anchor="end">$300</text>
+                <text x="50" y="154" text-anchor="end">$200</text>
+                <text x="50" y="209" text-anchor="end">$0</text>
               </g>
-              <line x1="60" y1="178" x2="620" y2="178" stroke="#525442" stroke-width="1" stroke-dasharray="4 4"/>
-              <text x="616" y="174" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10" fill="#525442">industry avg ~1%</text>
 
               <g>
-                <rect x="110" y="103" width="110" height="102" rx="2" fill="#D4A72C" opacity="0.85"/>
-                <rect x="260" y="119" width="110" height="86" rx="2" fill="#D4A72C" opacity="0.7"/>
-                <rect x="410" y="67" width="110" height="138" rx="2" fill="#D4A72C"/>
+                <rect x="110" y="73" width="110" height="132" rx="2" fill="#525442"/>
+                <rect x="260" y="170" width="110" height="35" rx="2" fill="#525442" opacity="0.9"/>
+                <rect x="410" y="204" width="110" height="1.6" rx="1" fill="#D4A72C"/>
               </g>
               <g font-family="Instrument Serif, serif" font-size="22" fill="#EDE6DA" font-style="italic">
-                <text x="165" y="96" text-anchor="middle">3.1%</text>
-                <text x="315" y="112" text-anchor="middle">2.6%</text>
-                <text x="465" y="60" text-anchor="middle">4.2%</text>
+                <text x="165" y="66" text-anchor="middle">$320</text>
+                <text x="315" y="163" text-anchor="middle">$85</text>
+                <text x="465" y="197" text-anchor="middle" fill="#D4A72C">$1.35</text>
               </g>
               <g font-family="JetBrains Mono, monospace" font-size="11" fill="#B4B29E" letter-spacing="1">
-                <text x="165" y="230" text-anchor="middle">SEQ A</text>
-                <text x="315" y="230" text-anchor="middle">SEQ B</text>
-                <text x="465" y="230" text-anchor="middle">SEQ C</text>
+                <text x="165" y="230" text-anchor="middle">PAID ADS</text>
+                <text x="315" y="230" text-anchor="middle">COLD EMAIL</text>
+                <text x="465" y="230" text-anchor="middle" fill="#D4A72C">BARKY</text>
               </g>
               <g font-family="DM Sans, sans-serif" font-size="11" fill="#7D7C68">
-                <text x="165" y="248" text-anchor="middle">Referral ceiling</text>
-                <text x="315" y="248" text-anchor="middle">Guarantee</text>
-                <text x="465" y="248" text-anchor="middle">Give-first</text>
+                <text x="165" y="248" text-anchor="middle">Industry ref.</text>
+                <text x="315" y="248" text-anchor="middle">Industry ref.</text>
+                <text x="465" y="248" text-anchor="middle">The agent</text>
               </g>
             </svg>
           </div>
@@ -814,9 +816,9 @@
       <div class="col prose">
         <h2 class="h2 reveal">What I'd do <span class="it">differently</span>.</h2>
         <ul class="bl reveal">
-          <li><span class="idx">01</span><span>Start with Sequence C (give-first) earlier. I spent the first 3 weeks on the offer-led sequences.</span></li>
-          <li><span class="idx">02</span><span>Build the variation engine before the first send. I wrote it during week 5 and wished I had it from day one.</span></li>
-          <li><span class="idx">03</span><span>Talk to the client's existing customers first. The language in the emails improved massively once I interviewed two of their current accounts about why they chose Channel Fusion.</span></li>
+          <li><span class="idx">01</span><span>Add objection handling earlier. Version 1 ended the call too quickly on soft no's. Version 2 has light follow-up logic and the conversion rate ticked up.</span></li>
+          <li><span class="idx">02</span><span>Record everything from day one. I didn't save the first 30 calls. Those would have been the most valuable training data.</span></li>
+          <li><span class="idx">03</span><span>Pick one vertical first. I started with plumbers, HVAC, and roofing in parallel. The pitch needed to be different for each, and trying to generalize hurt the conversion rate.</span></li>
         </ul>
       </div>
       <div></div>
@@ -830,10 +832,10 @@
       <div class="label">Other case studies</div>
     </div>
     <div class="related-grid">
-      <a href="barky-ai.html" class="r-card reveal">
-        <div class="r-cat">Voice AI · Case study 02</div>
-        <h3 class="r-title">Barky AI</h3>
-        <p class="r-desc">Voice agent for home service businesses. 23 demos from 100 cold calls.</p>
+      <a href="channel-fusion.html" class="r-card reveal">
+        <div class="r-cat">B2B outbound · Case study 01</div>
+        <h3 class="r-title">Channel Fusion</h3>
+        <p class="r-desc">$600K pipeline for an IT MSP in 90 days. Human-written templates, LLM only fills variables.</p>
         <span class="r-link">Read breakdown
           <svg class="arrow" width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
@@ -882,21 +884,38 @@
 </main>
 
 <script>
+  // sticky nav hairline
   (function(){
     const nav = document.getElementById('nav');
     const onScroll = () => { if (window.scrollY > 8) nav.classList.add('is-stuck'); else nav.classList.remove('is-stuck'); };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   })();
+  // reveals — scroll-driven, robust
   (function(){
-    const els = document.querySelectorAll('.reveal');
-    if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('is-in')); return; }
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) { entry.target.classList.add('is-in'); io.unobserve(entry.target); }
+    const els = Array.from(document.querySelectorAll('.reveal'));
+    let active = els.slice();
+    function check() {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      active = active.filter(e => {
+        const r = e.getBoundingClientRect();
+        if (r.top < vh * 1.05 && r.bottom > -50) {
+          e.classList.add('is-in');
+          return false;
+        }
+        return true;
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
-    els.forEach(e => io.observe(e));
+    }
+    requestAnimationFrame(check);
+    setTimeout(check, 100);
+    setTimeout(() => { document.documentElement.classList.add('reveals-off'); }, 1500);
+    let raf = null;
+    function onScroll() {
+      if (raf) return;
+      raf = requestAnimationFrame(() => { raf = null; check(); });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
   })();
 </script>
 

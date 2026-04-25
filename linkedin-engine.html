@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Channel Fusion — Case study — Hari Rajashekar</title>
+<title>LinkedIn Engine — Case study — Hari Rajashekar</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -509,6 +509,7 @@
   /* scroll reveal */
   .reveal { opacity: 0; transition: opacity 720ms cubic-bezier(.2,.6,.2,1); transition-delay: var(--reveal-delay, 0ms); }
   .reveal.is-in { opacity: 1; }
+  .reveals-off .reveal { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transition: none; } }
 
 </style>
@@ -547,21 +548,21 @@
       <div class="margin-num">(00)</div>
       <div class="col">
         <div class="label header-label reveal">
-          <span class="dot"></span> Case study · 01
+          <span class="dot"></span> Case study · 03
         </div>
 
-        <h1 class="header-title reveal" style="--reveal-delay: 60ms;">Channel <span style="font-style: italic;">Fusion</span></h1>
+        <h1 class="header-title reveal" style="--reveal-delay: 60ms;">LinkedIn <span style="font-style: italic;">Engine</span></h1>
 
         <p class="header-sub reveal" style="--reveal-delay: 120ms;">
-          How I sourced <span class="em">$600K</span> in pipeline for an IT MSP in 90 days.
+          A self-hosted Next.js app for posting on LinkedIn <span class="em">without</span> opening LinkedIn.
         </p>
 
         <div class="header-meta reveal" style="--reveal-delay: 180ms;">
-          <span class="k">Role</span>&nbsp; Solo operator
+          <span class="k">Role</span>&nbsp; Personal tool
           <span class="sep">·</span>
-          <span class="k">Timeline</span>&nbsp; 90 days
+          <span class="k">Timeline</span>&nbsp; 3 weekends
           <span class="sep">·</span>
-          <span class="k">Stack</span>&nbsp; Instantly, n8n, Apify, Claude API, Google Sheets
+          <span class="k">Stack</span>&nbsp; Next.js, Turso, Gemini, Vercel Blob
         </div>
       </div>
       <div></div>
@@ -572,20 +573,20 @@
   <section class="shell">
     <div class="metrics reveal">
       <div class="metric">
-        <div class="metric-v"><span class="accent">$</span>600K</div>
-        <div class="metric-k">Pipeline sourced</div>
+        <div class="metric-v">3</div>
+        <div class="metric-k">Weekends to v1</div>
       </div>
       <div class="metric">
-        <div class="metric-v">14</div>
-        <div class="metric-k">Enterprise demos booked</div>
+        <div class="metric-v"><span class="accent">$</span>0</div>
+        <div class="metric-k">Monthly hosting cost</div>
       </div>
       <div class="metric">
-        <div class="metric-v">90<span style="font-size: 0.6em; color: var(--text-dim);">d</span></div>
-        <div class="metric-k">Start to first demo</div>
+        <div class="metric-v">1</div>
+        <div class="metric-k">LinkedIn tab I no longer open</div>
       </div>
       <div class="metric">
-        <div class="metric-v">2,400<span style="color: var(--text-dim);">+</span></div>
-        <div class="metric-k">Cold emails sent</div>
+        <div class="metric-v">100<span style="font-size: 0.6em; color: var(--text-dim);">%</span></div>
+        <div class="metric-k">Self-hosted</div>
       </div>
     </div>
   </section>
@@ -598,7 +599,7 @@
         <div class="tldr reveal">
           <div class="label tldr-label">TL;DR</div>
           <p>
-            I ran cold outbound for an IT MSP called Channel Fusion. In 90 days, we booked 14 enterprise demos and sourced over <em>$600K</em> in pipeline. The interesting part: the thing that actually worked was the <em>opposite</em> of what most AI outbound playbooks tell you to do.
+            I don't like LinkedIn. I like that it drives inbound for my work, but I don't like being on it. So I built a small Next.js app that lets me write, schedule, and post to LinkedIn <em>without ever opening the site</em>. Three weekends, self-hosted, free to run.
           </p>
         </div>
       </div>
@@ -613,10 +614,10 @@
       <div class="col prose">
         <h2 class="h2 reveal">The <span class="it">problem</span>.</h2>
         <p class="reveal">
-          Channel Fusion is a mid-market IT managed service provider. Their sales motion was inbound and referrals, which kept the lights on but capped growth. They wanted to add outbound but didn't want to hire an SDR team.
+          LinkedIn is the highest-leverage channel for what I do. People hire me because they saw a post. The problem is that posting on LinkedIn means being on LinkedIn, and being on LinkedIn means scrolling LinkedIn. The algorithm is designed to keep you there. Every time I went to write a post, I'd lose 30 minutes to the feed <em>before I'd written a word</em>.
         </p>
         <p class="reveal">
-          Cold outbound has a bad reputation for a reason — most of it is terrible. We had 90 days to prove it could work without being spammy.
+          The other LinkedIn tools out there are either expensive, or they're SaaS products that own your content, or they need browser extensions that break every other week. I wanted something I owned, that ran locally, that I could change whenever I wanted.
         </p>
       </div>
       <div></div>
@@ -629,14 +630,11 @@
       <div class="margin-num">(03)</div>
       <div class="col prose">
         <h2 class="h2 reveal">Constraints.</h2>
-        <p class="reveal">
-          No existing outbound infrastructure. Small budget. I was building this solo while also building SpartanFlow. The client's reputation mattered more than short-term volume, so deliverability had to stay clean.
-        </p>
-        <p class="quiet reveal">Three hard limits:</p>
+        <p class="reveal">Three rules going in:</p>
         <ul class="bl reveal">
-          <li><span class="idx">01</span><span>Budget cap on tooling — roughly $400 / month.</span></li>
-          <li><span class="idx">02</span><span>Emails couldn't sound like templates.</span></li>
-          <li><span class="idx">03</span><span>Couldn't end up on blacklists.</span></li>
+          <li><span class="idx">01</span><span><strong style="font-weight: 500;">Free to run.</strong> &nbsp;No monthly subscriptions to anything.</span></li>
+          <li><span class="idx">02</span><span><strong style="font-weight: 500;">Self-hosted.</strong> &nbsp;No third-party SaaS storing my drafts.</span></li>
+          <li><span class="idx">03</span><span><strong style="font-weight: 500;">Single command to deploy.</strong> &nbsp;If updating the app takes more than 30 seconds, I'll stop using it.</span></li>
         </ul>
       </div>
       <div></div>
@@ -650,16 +648,14 @@
       <div class="col prose">
         <h2 class="h2 reveal">What I tried <span class="it">first</span>.</h2>
         <p class="reveal">
-          The obvious move was to let GPT write the emails. Give it a lead, give it a persona, give it some product context, and let it generate a personalized email. I built that in n8n in a weekend. It worked — <em>until we actually sent them.</em>
+          Started with the official LinkedIn API. That ended fast. The official API only lets you post to your own profile if you're an approved partner, which I'm not. The app review process is opaque and slow.
         </p>
         <p class="reveal">
-          Reply rates were bad. Open rates were fine. Bounces were fine. But the replies we did get were mostly "please remove me." When I read the emails back, I could tell. They were technically personalized, but they sounded like AI. Everyone's inbox gets 50 of these a day now. Recipients can spot them immediately.
+          Tried a couple of community libraries. They worked, but they relied on session cookies that expired every few days. <em>I wasn't interested in re-authenticating constantly.</em>
         </p>
-
-        <aside class="callout reveal">
-          <div class="label cl-label">The lesson</div>
-          <p>LLMs are good at <span class="accent">sounding</span> competent and bad at <span class="accent">sounding</span> human. In cold outbound, the second one is the only one that matters.</p>
-        </aside>
+        <p class="reveal">
+          Eventually settled on a different approach: don't try to fully automate the post. Let the app do everything except the final click. The app drafts, formats, and queues posts. It generates an image if I want one. It opens LinkedIn pre-filled. I hit publish. <em>Total time on LinkedIn: about 8 seconds.</em>
+        </p>
       </div>
       <div></div>
     </div>
@@ -672,72 +668,35 @@
       <div class="col prose">
         <h2 class="h2 reveal">What <span class="it">actually</span> worked.</h2>
         <p class="reveal">
-          I rebuilt the whole thing on a boring premise: humans still write better cold emails than LLMs. The LLM's job got downgraded to filling in 2 or 3 specific variables per lead — a casual icebreaker line, the company name stripped of any formal suffixes, and sometimes the city.
+          The stack is small and weirdly satisfying:
         </p>
-        <p class="reveal">
-          Everything else was hand-written templates with <em>deliberate imperfections</em>. Lowercase subject lines. Short sentences. Comma splices where a human would actually pause.
-        </p>
-
-        <div class="compare reveal">
-          <div class="compare-col">
-            <div class="cc-label">
-              <span class="label">Before · LLM-written</span>
-              <span class="label" style="color: var(--text-faint);">&lt; 1% reply</span>
-            </div>
-            <div class="cc-body">
-              "Hi Sarah, I hope this email finds you well. I came across Channel Fusion and was impressed by your innovative approach to managed IT services. I'd love to explore how we might..."
-            </div>
-          </div>
-          <div class="compare-col after">
-            <div class="cc-label">
-              <span class="label" style="color: var(--accent);">After · human template + vars</span>
-              <span class="label" style="color: var(--accent);">~4–5% reply</span>
-            </div>
-            <div class="cc-body">
-              "sarah — saw <em>{{company}}</em> expanded into <em>{{city}}</em> last quarter. quick question: are you handling helpdesk in-house or contracting it out? have a weird idea that might save you a person."
-            </div>
-          </div>
-        </div>
-
+        <ul class="bl reveal">
+          <li><span class="idx">A</span><span><strong style="font-weight: 500;">Next.js.</strong> &nbsp;The app itself.</span></li>
+          <li><span class="idx">B</span><span><strong style="font-weight: 500;">Turso.</strong> &nbsp;SQLite database for drafts, scheduled posts, image refs.</span></li>
+          <li><span class="idx">C</span><span><strong style="font-weight: 500;">Gemini.</strong> &nbsp;Image generation — cheaper than DALL·E for what I need.</span></li>
+          <li><span class="idx">D</span><span><strong style="font-weight: 500;">Vercel Blob.</strong> &nbsp;Image storage.</span></li>
+          <li><span class="idx">E</span><span><strong style="font-weight: 500;">Vercel.</strong> &nbsp;Hosting the app itself.</span></li>
+        </ul>
         <p class="reveal" style="margin-top: 2em;">
-          The variation engine picked which human-written template to use — it didn't generate new ones. That alone changed reply rates. We went from under 1% to around 4–5% on good weeks.
+          Everything sits on free tiers. Combined monthly cost is zero unless I go nuts with image generation, in which case it's a few cents.
         </p>
-
-        <div class="code reveal">
-          <div class="code-label">
-            <span class="label">variation-engine.ts</span>
-            <span class="label" style="color: var(--text-faint);">simplified</span>
-          </div>
-<pre><span class="tok-c">// pick a template, not a message. LLM only fills variables.</span>
-<span class="tok-k">const</span> <span class="tok-v">template</span> = pickTemplate(lead.vertical, lead.seniority);
-
-<span class="tok-k">const</span> <span class="tok-v">vars</span> = <span class="tok-k">await</span> claude.fill({
-  template: <span class="tok-v">template</span>.body,
-  need: [<span class="tok-s">'icebreaker'</span>, <span class="tok-s">'company_short'</span>, <span class="tok-s">'city'</span>],
-  lead,
-});
-
-<span class="tok-k">return</span> render(<span class="tok-v">template</span>, <span class="tok-v">vars</span>); <span class="tok-c">// no free-form generation</span></pre>
-        </div>
 
         <figure class="figure reveal">
           <div class="figure-frame">
-            <span class="fig-corner">Fig. 01 · pipeline diagram</span>
-            <span class="fig-mark">pipeline</span>
+            <span class="fig-corner">Fig. 01 · app UI</span>
+            <span class="fig-mark">draft → preview → publish</span>
           </div>
-          <figcaption class="figure-cap">01 · Lead → enrichment → template pick → variable fill → Instantly send</figcaption>
+          <figcaption class="figure-cap">01 · Draft library, LinkedIn-accurate preview, one-click open-in-LinkedIn.</figcaption>
         </figure>
 
         <p class="reveal">
-          The second unlock was the sequence structure. I ran three parallel sequences with different angles:
+          The interaction model is simple. I open the app. I type or paste a draft. The app cleans up formatting, suggests a hook variation if I want one, generates an image (or I upload my own), and gives me a preview that matches LinkedIn's actual rendering. When I'm ready, I hit <em>open in LinkedIn</em> and the app opens a new tab pre-filled with the content. I publish in 8 seconds without scrolling the feed.
         </p>
-        <ul class="bl reveal">
-          <li><span class="idx">A</span><span><strong style="font-weight: 500;">Referral ceiling framing.</strong> &nbsp;You've hit the top of what referrals can do.</span></li>
-          <li><span class="idx">B</span><span><strong style="font-weight: 500;">Performance guarantee.</strong> &nbsp;Pay only when it works.</span></li>
-          <li><span class="idx">C</span><span><strong style="font-weight: 500;">Give-first.</strong> &nbsp;I sent a useful report before asking for anything.</span></li>
-        </ul>
-        <p class="reveal" style="margin-top: 2em;">
-          Sequence C outperformed the others on open rate by a wide margin. Turns out leading with something useful works better than leading with an offer. <em>Obvious in hindsight.</em>
+        <p class="reveal">
+          I added a simple draft library because I'd been losing posts in my notes app for years. I added a scheduled queue because sometimes I write three posts in one sitting and don't want to publish them all at once.
+        </p>
+        <p class="reveal">
+          That's it. It's not a SaaS product. It's not for sale. It's a tool I built for me, and it works.
         </p>
       </div>
       <div></div>
@@ -751,53 +710,45 @@
       <div class="col prose">
         <h2 class="h2 reveal">The <span class="it">numbers</span>.</h2>
         <p class="reveal">
-          Over 90 days, we sent about 2,400 cold emails across the three sequences. Booked 14 demos, most of them enterprise. Pipeline from those demos crossed $600K. The best-performing sequence had a 4.2% reply rate — well above industry average for cold outbound in the MSP space.
+          3 weekends to v1. $0 to host. About <em>50 posts</em> published through it so far. The real number is how much time it gave me back — I used to lose 30 minutes per post to the feed. Now I lose 8 seconds. Multiply by a few posts a week and the math is obvious.
         </p>
 
         <div class="chart-wrap reveal">
           <div class="chart-head">
-            <div class="chart-title">Reply rate by sequence</div>
+            <div class="chart-title">Time on LinkedIn, per post</div>
             <div class="chart-legend">
-              <span><span class="sw" style="background: var(--text-faint);"></span>Industry avg.</span>
-              <span><span class="sw" style="background: var(--accent);"></span>Channel Fusion</span>
+              <span><span class="sw" style="background: var(--text-faint);"></span>Before</span>
+              <span><span class="sw" style="background: var(--accent);"></span>After</span>
             </div>
           </div>
           <div class="chart">
-            <svg viewBox="0 0 640 260" role="img" aria-label="Reply rate by sequence bar chart">
+            <svg viewBox="0 0 640 220" role="img" aria-label="Time on LinkedIn per post, before vs after">
               <g stroke="#283220" stroke-width="1">
                 <line x1="60" y1="40" x2="620" y2="40"/>
                 <line x1="60" y1="95" x2="620" y2="95"/>
                 <line x1="60" y1="150" x2="620" y2="150"/>
-                <line x1="60" y1="205" x2="620" y2="205"/>
               </g>
               <g font-family="JetBrains Mono, monospace" font-size="10" fill="#7D7C68">
-                <text x="50" y="44" text-anchor="end">5%</text>
-                <text x="50" y="99" text-anchor="end">3%</text>
-                <text x="50" y="154" text-anchor="end">1%</text>
-                <text x="50" y="209" text-anchor="end">0</text>
+                <text x="50" y="44" text-anchor="end">30m</text>
+                <text x="50" y="99" text-anchor="end">15m</text>
+                <text x="50" y="154" text-anchor="end">0</text>
               </g>
-              <line x1="60" y1="178" x2="620" y2="178" stroke="#525442" stroke-width="1" stroke-dasharray="4 4"/>
-              <text x="616" y="174" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10" fill="#525442">industry avg ~1%</text>
 
               <g>
-                <rect x="110" y="103" width="110" height="102" rx="2" fill="#D4A72C" opacity="0.85"/>
-                <rect x="260" y="119" width="110" height="86" rx="2" fill="#D4A72C" opacity="0.7"/>
-                <rect x="410" y="67" width="110" height="138" rx="2" fill="#D4A72C"/>
+                <rect x="140" y="40" width="140" height="110" rx="2" fill="#525442"/>
+                <rect x="360" y="148" width="140" height="2.5" rx="1.25" fill="#D4A72C"/>
               </g>
-              <g font-family="Instrument Serif, serif" font-size="22" fill="#EDE6DA" font-style="italic">
-                <text x="165" y="96" text-anchor="middle">3.1%</text>
-                <text x="315" y="112" text-anchor="middle">2.6%</text>
-                <text x="465" y="60" text-anchor="middle">4.2%</text>
+              <g font-family="Instrument Serif, serif" font-size="26" fill="#EDE6DA" font-style="italic">
+                <text x="210" y="32" text-anchor="middle">30 min</text>
+                <text x="430" y="138" text-anchor="middle" fill="#D4A72C">8 sec</text>
               </g>
               <g font-family="JetBrains Mono, monospace" font-size="11" fill="#B4B29E" letter-spacing="1">
-                <text x="165" y="230" text-anchor="middle">SEQ A</text>
-                <text x="315" y="230" text-anchor="middle">SEQ B</text>
-                <text x="465" y="230" text-anchor="middle">SEQ C</text>
+                <text x="210" y="180" text-anchor="middle">BEFORE</text>
+                <text x="430" y="180" text-anchor="middle" fill="#D4A72C">AFTER</text>
               </g>
               <g font-family="DM Sans, sans-serif" font-size="11" fill="#7D7C68">
-                <text x="165" y="248" text-anchor="middle">Referral ceiling</text>
-                <text x="315" y="248" text-anchor="middle">Guarantee</text>
-                <text x="465" y="248" text-anchor="middle">Give-first</text>
+                <text x="210" y="198" text-anchor="middle">Scroll first, write later</text>
+                <text x="430" y="198" text-anchor="middle">Open-in-LinkedIn, publish, close</text>
               </g>
             </svg>
           </div>
@@ -814,9 +765,8 @@
       <div class="col prose">
         <h2 class="h2 reveal">What I'd do <span class="it">differently</span>.</h2>
         <ul class="bl reveal">
-          <li><span class="idx">01</span><span>Start with Sequence C (give-first) earlier. I spent the first 3 weeks on the offer-led sequences.</span></li>
-          <li><span class="idx">02</span><span>Build the variation engine before the first send. I wrote it during week 5 and wished I had it from day one.</span></li>
-          <li><span class="idx">03</span><span>Talk to the client's existing customers first. The language in the emails improved massively once I interviewed two of their current accounts about why they chose Channel Fusion.</span></li>
+          <li><span class="idx">01</span><span>Build the draft library before the publishing flow. I built them in the wrong order and ended up rewriting the data model.</span></li>
+          <li><span class="idx">02</span><span>Skip the image generation feature for v1. I added it because I thought I'd want it. I use it maybe 1 in 10 posts. Should have shipped without it and added it when I actually missed it.</span></li>
         </ul>
       </div>
       <div></div>
@@ -830,18 +780,18 @@
       <div class="label">Other case studies</div>
     </div>
     <div class="related-grid">
-      <a href="barky-ai.html" class="r-card reveal">
-        <div class="r-cat">Voice AI · Case study 02</div>
-        <h3 class="r-title">Barky AI</h3>
-        <p class="r-desc">Voice agent for home service businesses. 23 demos from 100 cold calls.</p>
+      <a href="channel-fusion.html" class="r-card reveal">
+        <div class="r-cat">B2B outbound · Case study 01</div>
+        <h3 class="r-title">Channel Fusion</h3>
+        <p class="r-desc">$600K pipeline for an IT MSP in 90 days. Human-written templates, LLM only fills variables.</p>
         <span class="r-link">Read breakdown
           <svg class="arrow" width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
       </a>
-      <a href="daily-outreach-agent.html" class="r-card reveal" style="--reveal-delay: 80ms;">
-        <div class="r-cat">Personal system · Case study 04</div>
-        <h3 class="r-title">Daily Outreach Agent</h3>
-        <p class="r-desc">A Claude agent that runs my job search every morning. 100% automated.</p>
+      <a href="barky-ai.html" class="r-card reveal" style="--reveal-delay: 80ms;">
+        <div class="r-cat">Voice AI · Case study 02</div>
+        <h3 class="r-title">Barky AI</h3>
+        <p class="r-desc">Voice agent for home service businesses. 23 demos from 100 cold calls.</p>
         <span class="r-link">Read breakdown
           <svg class="arrow" width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
@@ -882,21 +832,38 @@
 </main>
 
 <script>
+  // sticky nav hairline
   (function(){
     const nav = document.getElementById('nav');
     const onScroll = () => { if (window.scrollY > 8) nav.classList.add('is-stuck'); else nav.classList.remove('is-stuck'); };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   })();
+  // reveals — scroll-driven, robust
   (function(){
-    const els = document.querySelectorAll('.reveal');
-    if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('is-in')); return; }
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) { entry.target.classList.add('is-in'); io.unobserve(entry.target); }
+    const els = Array.from(document.querySelectorAll('.reveal'));
+    let active = els.slice();
+    function check() {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      active = active.filter(e => {
+        const r = e.getBoundingClientRect();
+        if (r.top < vh * 1.05 && r.bottom > -50) {
+          e.classList.add('is-in');
+          return false;
+        }
+        return true;
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
-    els.forEach(e => io.observe(e));
+    }
+    requestAnimationFrame(check);
+    setTimeout(check, 100);
+    setTimeout(() => { document.documentElement.classList.add('reveals-off'); }, 1500);
+    let raf = null;
+    function onScroll() {
+      if (raf) return;
+      raf = requestAnimationFrame(() => { raf = null; check(); });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
   })();
 </script>
 

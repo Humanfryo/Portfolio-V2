@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Channel Fusion — Case study — Hari Rajashekar</title>
+<title>Daily Outreach Agent — Case study — Hari Rajashekar</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -214,6 +214,18 @@
     max-width: 20ch;
   }
   .h2 .it { font-style: italic; }
+
+  .h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(22px, 2.2vw, 28px);
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+    color: var(--text);
+    margin: 0 0 0.8em;
+    max-width: 26ch;
+  }
+  .h3 .it { font-style: italic; }
 
   .prose p {
     font-size: 17.5px;
@@ -509,6 +521,7 @@
   /* scroll reveal */
   .reveal { opacity: 0; transition: opacity 720ms cubic-bezier(.2,.6,.2,1); transition-delay: var(--reveal-delay, 0ms); }
   .reveal.is-in { opacity: 1; }
+  .reveals-off .reveal { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transition: none; } }
 
 </style>
@@ -547,21 +560,21 @@
       <div class="margin-num">(00)</div>
       <div class="col">
         <div class="label header-label reveal">
-          <span class="dot"></span> Case study · 01
+          <span class="dot"></span> Case study · 04
         </div>
 
-        <h1 class="header-title reveal" style="--reveal-delay: 60ms;">Channel <span style="font-style: italic;">Fusion</span></h1>
+        <h1 class="header-title reveal" style="--reveal-delay: 60ms;">Daily <span style="font-style: italic;">Outreach</span> Agent</h1>
 
         <p class="header-sub reveal" style="--reveal-delay: 120ms;">
-          How I sourced <span class="em">$600K</span> in pipeline for an IT MSP in 90 days.
+          An agent that runs my job search every morning <span class="em">before</span> I'm awake.
         </p>
 
         <div class="header-meta reveal" style="--reveal-delay: 180ms;">
-          <span class="k">Role</span>&nbsp; Solo operator
+          <span class="k">Role</span>&nbsp; Personal system
           <span class="sep">·</span>
-          <span class="k">Timeline</span>&nbsp; 90 days
+          <span class="k">Timeline</span>&nbsp; Running daily since Feb 2026
           <span class="sep">·</span>
-          <span class="k">Stack</span>&nbsp; Instantly, n8n, Apify, Claude API, Google Sheets
+          <span class="k">Stack</span>&nbsp; Claude Co-Work, Sheets, Apps Script, Prospeo, Hunter, Apollo, Reoon
         </div>
       </div>
       <div></div>
@@ -572,20 +585,20 @@
   <section class="shell">
     <div class="metrics reveal">
       <div class="metric">
-        <div class="metric-v"><span class="accent">$</span>600K</div>
-        <div class="metric-k">Pipeline sourced</div>
+        <div class="metric-v">11</div>
+        <div class="metric-k">Job titles searched daily</div>
       </div>
       <div class="metric">
-        <div class="metric-v">14</div>
-        <div class="metric-k">Enterprise demos booked</div>
+        <div class="metric-v">4</div>
+        <div class="metric-k">Verification services in cascade</div>
       </div>
       <div class="metric">
-        <div class="metric-v">90<span style="font-size: 0.6em; color: var(--text-dim);">d</span></div>
-        <div class="metric-k">Start to first demo</div>
+        <div class="metric-v">7<span style="color: var(--text-dim);">–</span>8<span style="font-size: 0.5em; color: var(--text-dim); letter-spacing: 0.05em;">AM</span></div>
+        <div class="metric-k">Daily auto-send window</div>
       </div>
       <div class="metric">
-        <div class="metric-v">2,400<span style="color: var(--text-dim);">+</span></div>
-        <div class="metric-k">Cold emails sent</div>
+        <div class="metric-v">0</div>
+        <div class="metric-k">Manual steps after setup</div>
       </div>
     </div>
   </section>
@@ -598,7 +611,7 @@
         <div class="tldr reveal">
           <div class="label tldr-label">TL;DR</div>
           <p>
-            I ran cold outbound for an IT MSP called Channel Fusion. In 90 days, we booked 14 enterprise demos and sourced over <em>$600K</em> in pipeline. The interesting part: the thing that actually worked was the <em>opposite</em> of what most AI outbound playbooks tell you to do.
+            I built an agent that runs my entire job search loop every morning. It searches 11 job titles across LinkedIn, finds the right hiring managers, verifies their emails through a 4-step cascade, drafts outreach in my voice, and auto-sends between 7 and 8 AM. I review the drafts the night before. <em>The agent does the rest.</em> It's been running daily since February.
           </p>
         </div>
       </div>
@@ -613,10 +626,10 @@
       <div class="col prose">
         <h2 class="h2 reveal">The <span class="it">problem</span>.</h2>
         <p class="reveal">
-          Channel Fusion is a mid-market IT managed service provider. Their sales motion was inbound and referrals, which kept the lights on but capped growth. They wanted to add outbound but didn't want to hire an SDR team.
+          Job searching is a part-time job on top of a full-time job. The actual useful work — finding the right roles, finding the right contacts, writing personalized notes — gets crowded out by the busywork of finding, verifying, and tracking everything.
         </p>
         <p class="reveal">
-          Cold outbound has a bad reputation for a reason — most of it is terrible. We had 90 days to prove it could work without being spammy.
+          I wasn't trying to spray-and-pray. I was trying to send 5–10 highly personalized emails per day to people I genuinely wanted to talk to. The bottleneck wasn't writing. It was the <em>45 minutes of research</em> required before each email — pulling the contact, verifying the email, checking they were still in the role, drafting something that didn't sound generic.
         </p>
       </div>
       <div></div>
@@ -629,14 +642,12 @@
       <div class="margin-num">(03)</div>
       <div class="col prose">
         <h2 class="h2 reveal">Constraints.</h2>
-        <p class="reveal">
-          No existing outbound infrastructure. Small budget. I was building this solo while also building SpartanFlow. The client's reputation mattered more than short-term volume, so deliverability had to stay clean.
-        </p>
-        <p class="quiet reveal">Three hard limits:</p>
+        <p class="reveal">Four rules going in:</p>
         <ul class="bl reveal">
-          <li><span class="idx">01</span><span>Budget cap on tooling — roughly $400 / month.</span></li>
-          <li><span class="idx">02</span><span>Emails couldn't sound like templates.</span></li>
-          <li><span class="idx">03</span><span>Couldn't end up on blacklists.</span></li>
+          <li><span class="idx">01</span><span><strong style="font-weight: 500;">I stay in the loop on quality.</strong> &nbsp;The agent could research and draft, but I had to approve every email before send.</span></li>
+          <li><span class="idx">02</span><span><strong style="font-weight: 500;">Email verification near-perfect.</strong> &nbsp;Bounces hurt deliverability on my main account.</span></li>
+          <li><span class="idx">03</span><span><strong style="font-weight: 500;">Tiny cost.</strong> &nbsp;This is a personal system, not a startup.</span></li>
+          <li><span class="idx">04</span><span><strong style="font-weight: 500;">Readable.</strong> &nbsp;I had to be able to see what it sent. No black-box agents.</span></li>
         </ul>
       </div>
       <div></div>
@@ -650,15 +661,18 @@
       <div class="col prose">
         <h2 class="h2 reveal">What I tried <span class="it">first</span>.</h2>
         <p class="reveal">
-          The obvious move was to let GPT write the emails. Give it a lead, give it a persona, give it some product context, and let it generate a personalized email. I built that in n8n in a weekend. It worked — <em>until we actually sent them.</em>
+          First version was a Claude Project I'd open every morning, paste a list of jobs into, and ask for outreach. It worked — kind of. The drafts were good. But the loop was still manual. I was still doing the LinkedIn searches, still pulling the contacts, still running each email through Hunter and crossing my fingers.
         </p>
         <p class="reveal">
-          Reply rates were bad. Open rates were fine. Bounces were fine. But the replies we did get were mostly "please remove me." When I read the emails back, I could tell. They were technically personalized, but they sounded like AI. Everyone's inbox gets 50 of these a day now. Recipients can spot them immediately.
+          It was a tool, not a system. <em>The 45 minutes of busywork was still 45 minutes of busywork.</em>
+        </p>
+        <p class="reveal">
+          The second version moved everything into n8n. That worked too — but n8n was overkill for what was effectively a daily cron job over a Google Sheet. I was maintaining workflows for a problem that didn't need workflows.
         </p>
 
         <aside class="callout reveal">
           <div class="label cl-label">The lesson</div>
-          <p>LLMs are good at <span class="accent">sounding</span> competent and bad at <span class="accent">sounding</span> human. In cold outbound, the second one is the only one that matters.</p>
+          <p>If your problem is a <span class="accent">cron job over a sheet</span>, build a cron job over a sheet. Not a workflow engine.</p>
         </aside>
       </div>
       <div></div>
@@ -672,72 +686,90 @@
       <div class="col prose">
         <h2 class="h2 reveal">What <span class="it">actually</span> worked.</h2>
         <p class="reveal">
-          I rebuilt the whole thing on a boring premise: humans still write better cold emails than LLMs. The LLM's job got downgraded to filling in 2 or 3 specific variables per lead — a casual icebreaker line, the company name stripped of any formal suffixes, and sometimes the city.
-        </p>
-        <p class="reveal">
-          Everything else was hand-written templates with <em>deliberate imperfections</em>. Lowercase subject lines. Short sentences. Comma splices where a human would actually pause.
+          The version that stuck is built on Claude Co-Work, Google Sheets, and a small Apps Script file. Five components, each doing one thing.
         </p>
 
-        <div class="compare reveal">
+        <figure class="figure reveal">
+          <div class="figure-frame">
+            <span class="fig-corner">Fig. 01 · daily loop</span>
+            <span class="fig-mark">6 AM → 10 AM</span>
+          </div>
+          <figcaption class="figure-cap">01 · Co-Work search → verification cascade → drafts → sheet → auto-send → bounce loop.</figcaption>
+        </figure>
+
+        <h3 class="h3 reveal" style="margin-top: 3em;">01 · The morning <span class="it">search</span>.</h3>
+        <p class="reveal">
+          Co-Work runs at 6 AM. It searches LinkedIn for 11 job titles I care about — Growth Engineer, GTM Engineer, AI Solutions Architect, AI Consultant, and a few variants. For each new role, it pulls the company, the role description, and 2 likely hiring contacts.
+        </p>
+
+        <h3 class="h3 reveal" style="margin-top: 2.4em;">02 · The verification <span class="it">cascade</span>.</h3>
+        <p class="reveal">
+          This is the part most automated outreach systems get wrong. They guess emails. <em>I refuse to guess.</em> The agent runs each contact through a cascade: LinkedIn → Prospeo → Hunter → Apollo. If a service finds the email, it stops. If none of them find it, the contact gets flagged as <em>send LinkedIn DM instead</em>. We never invent an email. Bounces are how your domain reputation dies.
+        </p>
+
+        <div class="compare reveal" style="margin-top: 1.6em;">
           <div class="compare-col">
             <div class="cc-label">
-              <span class="label">Before · LLM-written</span>
-              <span class="label" style="color: var(--text-faint);">&lt; 1% reply</span>
+              <span class="label">Most outreach systems</span>
+              <span class="label" style="color: var(--text-faint);">guess + send</span>
             </div>
             <div class="cc-body">
-              "Hi Sarah, I hope this email finds you well. I came across Channel Fusion and was impressed by your innovative approach to managed IT services. I'd love to explore how we might..."
+              firstname.lastname@company.com — looks plausible, often wrong, bounces, kills your domain reputation.
             </div>
           </div>
           <div class="compare-col after">
             <div class="cc-label">
-              <span class="label" style="color: var(--accent);">After · human template + vars</span>
-              <span class="label" style="color: var(--accent);">~4–5% reply</span>
+              <span class="label" style="color: var(--accent);">This system</span>
+              <span class="label" style="color: var(--accent);">verify or DM</span>
             </div>
             <div class="cc-body">
-              "sarah — saw <em>{{company}}</em> expanded into <em>{{city}}</em> last quarter. quick question: are you handling helpdesk in-house or contracting it out? have a weird idea that might save you a person."
+              4-service cascade. If nothing returns a verified email, status = <em>Send LinkedIn DM</em>. We never send to a guessed address.
             </div>
           </div>
         </div>
 
-        <p class="reveal" style="margin-top: 2em;">
-          The variation engine picked which human-written template to use — it didn't generate new ones. That alone changed reply rates. We went from under 1% to around 4–5% on good weeks.
+        <h3 class="h3 reveal" style="margin-top: 2.4em;">03 · The voice-matched <span class="it">drafts</span>.</h3>
+        <p class="reveal">
+          Each verified contact gets a draft. The drafts are short — under 80 words, hand-written templates with 2–3 LLM-filled variables. Same architecture as Channel Fusion. The LLM doesn't write the email. <em>It picks the right template and fills in the casual icebreaker and the company name.</em>
+        </p>
+
+        <h3 class="h3 reveal" style="margin-top: 2.4em;">04 · The Google Sheet as a <span class="it">database</span>.</h3>
+        <p class="reveal">
+          Every contact, every status, every email lives in a single sheet. Column Q is the status: <em>Yes, No, Sent, Send LinkedIn DM, Bounced — send LinkedIn DM</em>. The whole system is readable in a single tab. Apps Script handles all the writes through a small <code style="font-family: var(--mono); font-size: 0.9em; background: rgba(0,0,0,0.2); padding: 1px 6px; border-radius: 3px;">AddOutreach.gs</code> file.
+        </p>
+
+        <h3 class="h3 reveal" style="margin-top: 2.4em;">05 · The auto-send and <span class="it">bounce loop</span>.</h3>
+        <p class="reveal">
+          Two scheduled Apps Script functions handle the send side. <code style="font-family: var(--mono); font-size: 0.9em; background: rgba(0,0,0,0.2); padding: 1px 6px; border-radius: 3px;">sendApprovedEmails</code> runs between 7 and 8 AM on weekdays. It finds every row marked <em>Yes</em>, sends the email through my Workspace account, and updates the status to <em>Sent</em>. <code style="font-family: var(--mono); font-size: 0.9em; background: rgba(0,0,0,0.2); padding: 1px 6px; border-radius: 3px;">checkBounces</code> runs an hour later — 9 to 10 AM. If a sent email bounced, it flips the status to <em>Bounced — send LinkedIn DM</em> so I know to follow up on LinkedIn instead.
         </p>
 
         <div class="code reveal">
           <div class="code-label">
-            <span class="label">variation-engine.ts</span>
+            <span class="label">AddOutreach.gs</span>
             <span class="label" style="color: var(--text-faint);">simplified</span>
           </div>
-<pre><span class="tok-c">// pick a template, not a message. LLM only fills variables.</span>
-<span class="tok-k">const</span> <span class="tok-v">template</span> = pickTemplate(lead.vertical, lead.seniority);
+<pre><span class="tok-c">// runs 7–8 AM weekdays. small and boring on purpose.</span>
+<span class="tok-k">function</span> <span class="tok-v">sendApprovedEmails</span>() {
+  <span class="tok-k">const</span> sheet = SpreadsheetApp.getActive().getSheetByName(<span class="tok-s">'Outreach'</span>);
+  <span class="tok-k">const</span> rows = sheet.getDataRange().getValues();
 
-<span class="tok-k">const</span> <span class="tok-v">vars</span> = <span class="tok-k">await</span> claude.fill({
-  template: <span class="tok-v">template</span>.body,
-  need: [<span class="tok-s">'icebreaker'</span>, <span class="tok-s">'company_short'</span>, <span class="tok-s">'city'</span>],
-  lead,
-});
+  rows.forEach((row, i) =&gt; {
+    <span class="tok-k">if</span> (row[STATUS_COL] !== <span class="tok-s">'Yes'</span>) <span class="tok-k">return</span>;
 
-<span class="tok-k">return</span> render(<span class="tok-v">template</span>, <span class="tok-v">vars</span>); <span class="tok-c">// no free-form generation</span></pre>
+    GmailApp.sendEmail(row[EMAIL_COL], row[SUBJECT_COL], row[BODY_COL]);
+    sheet.getRange(i + <span class="tok-v">1</span>, STATUS_COL + <span class="tok-v">1</span>).setValue(<span class="tok-s">'Sent'</span>);
+  });
+}
+
+<span class="tok-c">// runs 9–10 AM. flips bounced rows to LinkedIn DM track.</span>
+<span class="tok-k">function</span> <span class="tok-v">checkBounces</span>() {
+  <span class="tok-k">const</span> threads = GmailApp.search(<span class="tok-s">'from:mailer-daemon newer_than:1d'</span>);
+  <span class="tok-c">// match bounced addresses back to sheet rows, update status</span>
+}</pre>
         </div>
 
-        <figure class="figure reveal">
-          <div class="figure-frame">
-            <span class="fig-corner">Fig. 01 · pipeline diagram</span>
-            <span class="fig-mark">pipeline</span>
-          </div>
-          <figcaption class="figure-cap">01 · Lead → enrichment → template pick → variable fill → Instantly send</figcaption>
-        </figure>
-
-        <p class="reveal">
-          The second unlock was the sequence structure. I ran three parallel sequences with different angles:
-        </p>
-        <ul class="bl reveal">
-          <li><span class="idx">A</span><span><strong style="font-weight: 500;">Referral ceiling framing.</strong> &nbsp;You've hit the top of what referrals can do.</span></li>
-          <li><span class="idx">B</span><span><strong style="font-weight: 500;">Performance guarantee.</strong> &nbsp;Pay only when it works.</span></li>
-          <li><span class="idx">C</span><span><strong style="font-weight: 500;">Give-first.</strong> &nbsp;I sent a useful report before asking for anything.</span></li>
-        </ul>
         <p class="reveal" style="margin-top: 2em;">
-          Sequence C outperformed the others on open rate by a wide margin. Turns out leading with something useful works better than leading with an offer. <em>Obvious in hindsight.</em>
+          The whole thing is maybe 200 lines of Apps Script and a sheet. <em>No servers. No deployments. No subscriptions</em> beyond the verification services I'd be using anyway.
         </p>
       </div>
       <div></div>
@@ -751,53 +783,47 @@
       <div class="col prose">
         <h2 class="h2 reveal">The <span class="it">numbers</span>.</h2>
         <p class="reveal">
-          Over 90 days, we sent about 2,400 cold emails across the three sequences. Booked 14 demos, most of them enterprise. Pipeline from those demos crossed $600K. The best-performing sequence had a 4.2% reply rate — well above industry average for cold outbound in the MSP space.
+          The agent has run every weekday since February. It identifies <em>5–15 new roles per day</em> depending on how active the market is. The verification cascade resolves about 75% of contacts to a real email; the rest go to LinkedIn outreach. Bounce rate has stayed under 1% — clean enough that my domain reputation hasn't moved.
+        </p>
+        <p class="reveal">
+          I spend roughly 15 minutes a night reviewing drafts. <em>I used to spend 90.</em>
         </p>
 
         <div class="chart-wrap reveal">
           <div class="chart-head">
-            <div class="chart-title">Reply rate by sequence</div>
+            <div class="chart-title">Time per day on outreach prep</div>
             <div class="chart-legend">
-              <span><span class="sw" style="background: var(--text-faint);"></span>Industry avg.</span>
-              <span><span class="sw" style="background: var(--accent);"></span>Channel Fusion</span>
+              <span><span class="sw" style="background: var(--text-faint);"></span>Before</span>
+              <span><span class="sw" style="background: var(--accent);"></span>After</span>
             </div>
           </div>
           <div class="chart">
-            <svg viewBox="0 0 640 260" role="img" aria-label="Reply rate by sequence bar chart">
+            <svg viewBox="0 0 640 220" role="img" aria-label="Time per day on outreach prep, before vs after">
               <g stroke="#283220" stroke-width="1">
                 <line x1="60" y1="40" x2="620" y2="40"/>
                 <line x1="60" y1="95" x2="620" y2="95"/>
                 <line x1="60" y1="150" x2="620" y2="150"/>
-                <line x1="60" y1="205" x2="620" y2="205"/>
               </g>
               <g font-family="JetBrains Mono, monospace" font-size="10" fill="#7D7C68">
-                <text x="50" y="44" text-anchor="end">5%</text>
-                <text x="50" y="99" text-anchor="end">3%</text>
-                <text x="50" y="154" text-anchor="end">1%</text>
-                <text x="50" y="209" text-anchor="end">0</text>
+                <text x="50" y="44" text-anchor="end">90m</text>
+                <text x="50" y="99" text-anchor="end">45m</text>
+                <text x="50" y="154" text-anchor="end">0</text>
               </g>
-              <line x1="60" y1="178" x2="620" y2="178" stroke="#525442" stroke-width="1" stroke-dasharray="4 4"/>
-              <text x="616" y="174" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10" fill="#525442">industry avg ~1%</text>
-
               <g>
-                <rect x="110" y="103" width="110" height="102" rx="2" fill="#D4A72C" opacity="0.85"/>
-                <rect x="260" y="119" width="110" height="86" rx="2" fill="#D4A72C" opacity="0.7"/>
-                <rect x="410" y="67" width="110" height="138" rx="2" fill="#D4A72C"/>
+                <rect x="140" y="40" width="140" height="110" rx="2" fill="#525442"/>
+                <rect x="360" y="131.7" width="140" height="18.3" rx="2" fill="#D4A72C"/>
               </g>
-              <g font-family="Instrument Serif, serif" font-size="22" fill="#EDE6DA" font-style="italic">
-                <text x="165" y="96" text-anchor="middle">3.1%</text>
-                <text x="315" y="112" text-anchor="middle">2.6%</text>
-                <text x="465" y="60" text-anchor="middle">4.2%</text>
+              <g font-family="Instrument Serif, serif" font-size="26" fill="#EDE6DA" font-style="italic">
+                <text x="210" y="32" text-anchor="middle">90 min</text>
+                <text x="430" y="123" text-anchor="middle" fill="#D4A72C">15 min</text>
               </g>
               <g font-family="JetBrains Mono, monospace" font-size="11" fill="#B4B29E" letter-spacing="1">
-                <text x="165" y="230" text-anchor="middle">SEQ A</text>
-                <text x="315" y="230" text-anchor="middle">SEQ B</text>
-                <text x="465" y="230" text-anchor="middle">SEQ C</text>
+                <text x="210" y="180" text-anchor="middle">BEFORE</text>
+                <text x="430" y="180" text-anchor="middle" fill="#D4A72C">AFTER</text>
               </g>
               <g font-family="DM Sans, sans-serif" font-size="11" fill="#7D7C68">
-                <text x="165" y="248" text-anchor="middle">Referral ceiling</text>
-                <text x="315" y="248" text-anchor="middle">Guarantee</text>
-                <text x="465" y="248" text-anchor="middle">Give-first</text>
+                <text x="210" y="198" text-anchor="middle">Manual research + drafts</text>
+                <text x="430" y="198" text-anchor="middle">Review approved drafts</text>
               </g>
             </svg>
           </div>
@@ -814,9 +840,9 @@
       <div class="col prose">
         <h2 class="h2 reveal">What I'd do <span class="it">differently</span>.</h2>
         <ul class="bl reveal">
-          <li><span class="idx">01</span><span>Start with Sequence C (give-first) earlier. I spent the first 3 weeks on the offer-led sequences.</span></li>
-          <li><span class="idx">02</span><span>Build the variation engine before the first send. I wrote it during week 5 and wished I had it from day one.</span></li>
-          <li><span class="idx">03</span><span>Talk to the client's existing customers first. The language in the emails improved massively once I interviewed two of their current accounts about why they chose Channel Fusion.</span></li>
+          <li><span class="idx">01</span><span>Build the verification cascade first. I built it third. The first two weeks of bounces taught me the lesson the hard way.</span></li>
+          <li><span class="idx">02</span><span>Skip the n8n version entirely. I lost two weeks rebuilding something that worked fine in Apps Script.</span></li>
+          <li><span class="idx">03</span><span>Add a "snooze" status to the sheet earlier. Some companies are interesting but not now. I had to retrofit the logic to handle that.</span></li>
         </ul>
       </div>
       <div></div>
@@ -830,18 +856,18 @@
       <div class="label">Other case studies</div>
     </div>
     <div class="related-grid">
-      <a href="barky-ai.html" class="r-card reveal">
-        <div class="r-cat">Voice AI · Case study 02</div>
-        <h3 class="r-title">Barky AI</h3>
-        <p class="r-desc">Voice agent for home service businesses. 23 demos from 100 cold calls.</p>
+      <a href="channel-fusion.html" class="r-card reveal">
+        <div class="r-cat">B2B outbound · Case study 01</div>
+        <h3 class="r-title">Channel Fusion</h3>
+        <p class="r-desc">$600K pipeline for an IT MSP in 90 days. Same template-with-variables architecture as the drafts here.</p>
         <span class="r-link">Read breakdown
           <svg class="arrow" width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
       </a>
-      <a href="daily-outreach-agent.html" class="r-card reveal" style="--reveal-delay: 80ms;">
-        <div class="r-cat">Personal system · Case study 04</div>
-        <h3 class="r-title">Daily Outreach Agent</h3>
-        <p class="r-desc">A Claude agent that runs my job search every morning. 100% automated.</p>
+      <a href="linkedin-engine.html" class="r-card reveal" style="--reveal-delay: 80ms;">
+        <div class="r-cat">Personal tool · Case study 03</div>
+        <h3 class="r-title">LinkedIn Engine</h3>
+        <p class="r-desc">A self-hosted Next.js app for posting on LinkedIn without opening LinkedIn.</p>
         <span class="r-link">Read breakdown
           <svg class="arrow" width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
@@ -882,21 +908,38 @@
 </main>
 
 <script>
+  // sticky nav hairline
   (function(){
     const nav = document.getElementById('nav');
     const onScroll = () => { if (window.scrollY > 8) nav.classList.add('is-stuck'); else nav.classList.remove('is-stuck'); };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   })();
+  // reveals — scroll-driven, robust
   (function(){
-    const els = document.querySelectorAll('.reveal');
-    if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('is-in')); return; }
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) { entry.target.classList.add('is-in'); io.unobserve(entry.target); }
+    const els = Array.from(document.querySelectorAll('.reveal'));
+    let active = els.slice();
+    function check() {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      active = active.filter(e => {
+        const r = e.getBoundingClientRect();
+        if (r.top < vh * 1.05 && r.bottom > -50) {
+          e.classList.add('is-in');
+          return false;
+        }
+        return true;
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
-    els.forEach(e => io.observe(e));
+    }
+    requestAnimationFrame(check);
+    setTimeout(check, 100);
+    setTimeout(() => { document.documentElement.classList.add('reveals-off'); }, 1500);
+    let raf = null;
+    function onScroll() {
+      if (raf) return;
+      raf = requestAnimationFrame(() => { raf = null; check(); });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
   })();
 </script>
 
