@@ -2,4 +2,7 @@
 # The clean production versions live at the root with kebab-case filenames
 # (channel-fusion.html, barky-ai.html, etc.). Source originals are kept
 # locally for reference but excluded from the deploy.
-Case Study - *.html
+#
+# Leading slash scopes this to the repo root only — copies stored under
+# hari-s-portfolio/project/ are tracked as the canonical design prototypes.
+/Case Study - *.html

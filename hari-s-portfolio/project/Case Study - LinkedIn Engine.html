@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LinkedIn Engine — Case study — Hari Rajashekar</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #1C2317;
+    --bg-raised: #222A1C;
+    --bg-card: #242C1E;
+    --bg-inset: #161C12;
+    --line: #34402C;
+    --line-soft: #283220;
+    --text: #EDE6DA;
+    --text-mid: #B4B29E;
+    --text-dim: #7D7C68;
+    --text-faint: #525442;
+    --accent: #D4A72C;
+    --accent-dim: #9A7A1C;
+
+    --serif: "Instrument Serif", "Times New Roman", serif;
+    --sans: "DM Sans", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+
+    --page-max: 1280px;
+    --page-pad: clamp(24px, 4vw, 64px);
+    --read-col: 680px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "ss01","ss02";
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--accent); color: #1C2317; }
+  a { color: inherit; text-decoration: none; }
+
+  .shell {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding-left: var(--page-pad);
+    padding-right: var(--page-pad);
+  }
+  .rule { height:1px; background: var(--line-soft); border:0; margin:0; }
+
+  .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 400;
+  }
+
+  /* ————— nav ————— */
+  .nav {
+    position: sticky; top:0; z-index: 50;
+    background: color-mix(in oklab, var(--bg) 92%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 240ms ease;
+  }
+  .nav.is-stuck { border-bottom-color: var(--line-soft); }
+  .nav-inner { display:flex; align-items:center; justify-content:space-between; padding: 20px 0; }
+  .nav-mark { display:inline-flex; align-items:center; gap:10px; font-size:14px; font-weight:500; letter-spacing:-0.01em; white-space:nowrap; }
+  .nav-mark .mark-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 3px color-mix(in oklab, var(--accent) 22%, transparent); }
+  .nav-links { display:flex; gap: 32px; align-items: center; font-size: 14px; color: var(--text-mid); }
+  .nav-links a { transition: color 180ms ease; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { color: var(--text); border:1px solid var(--line); padding:8px 14px; border-radius:999px; font-size:13px; white-space: nowrap; transition: border-color 180ms ease, background 180ms ease; }
+  .nav-cta:hover { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 8%, transparent); }
+  @media (max-width: 720px) { .nav-links a:not(.nav-cta) { display: none; } }
+
+  /* ————— breadcrumb ————— */
+  .crumb {
+    padding-top: 40px;
+    padding-bottom: 32px;
+  }
+  .crumb a {
+    font-size: 13px;
+    color: var(--text-mid);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 180ms ease;
+  }
+  .crumb a:hover { color: var(--accent); }
+
+  /* ————— reading frame: margin + column ————— */
+  .frame {
+    display: grid;
+    grid-template-columns: 96px minmax(0, var(--read-col)) 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .margin-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--text-faint);
+    padding-top: 10px;
+    position: sticky;
+    top: 96px;
+  }
+  .col { min-width: 0; }
+
+  @media (max-width: 900px) {
+    .frame { grid-template-columns: 1fr; gap: 12px; }
+    .margin-num { position: static; padding-top: 0; }
+  }
+
+  /* ————— header block ————— */
+  .header-block { padding-top: 16px; padding-bottom: clamp(64px, 10vh, 112px); }
+  .header-label { margin-bottom: 28px; display: inline-flex; align-items: center; gap: 10px; }
+  .header-label .dot { width:6px; height:6px; border-radius:50%; background: var(--accent); display:inline-block; }
+
+  .header-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(64px, 10vw, 136px);
+    line-height: 0.96;
+    letter-spacing: -0.02em;
+    margin: 0 0 28px;
+    max-width: 14ch;
+  }
+  .header-sub {
+    font-family: var(--sans);
+    font-size: clamp(20px, 1.8vw, 26px);
+    line-height: 1.45;
+    color: var(--text-mid);
+    margin: 0 0 40px;
+    max-width: 48ch;
+    font-weight: 300;
+  }
+  .header-sub .em { color: var(--accent); font-style: italic; font-family: var(--serif); font-size: 1.08em; }
+  .header-meta {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--text-dim);
+    max-width: 56ch;
+  }
+  .header-meta .k { color: var(--text-faint); }
+  .header-meta .sep { margin: 0 10px; color: var(--text-faint); }
+
+  /* ————— metrics strip ————— */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .metric {
+    padding: 36px 28px 36px 0;
+    border-right: 1px solid var(--line-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .metric:not(:first-child) { padding-left: 28px; }
+  .metric:last-child { border-right: 0; }
+  .metric-v {
+    font-family: var(--serif);
+    font-size: clamp(56px, 6vw, 80px);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .metric-v .accent { color: var(--accent); font-style: italic; }
+  .metric-k {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  @media (max-width: 720px) {
+    .metrics { grid-template-columns: 1fr; }
+    .metric { border-right: 0; border-bottom: 1px solid var(--line-soft); padding: 24px 0; }
+    .metric:not(:first-child) { padding-left: 0; }
+    .metric:last-child { border-bottom: 0; }
+  }
+
+  /* ————— section ————— */
+  .section { padding-top: clamp(72px, 10vh, 120px); padding-bottom: 0; }
+  .section-last { padding-bottom: clamp(72px, 10vh, 120px); }
+  .h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(36px, 4.4vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    margin: 0 0 32px;
+    max-width: 20ch;
+  }
+  .h2 .it { font-style: italic; }
+
+  .prose p {
+    font-size: 17.5px;
+    line-height: 1.7;
+    color: var(--text);
+    margin: 0 0 1.3em;
+    max-width: 65ch;
+  }
+  .prose p.quiet { color: var(--text-mid); }
+  .prose p em { font-style: italic; color: var(--text); }
+
+  /* TL;DR */
+  .tldr {
+    padding: 28px 32px;
+    border-left: 2px solid var(--accent);
+    background: color-mix(in oklab, var(--accent) 4%, transparent);
+    margin-bottom: 0;
+  }
+  .tldr .tldr-label { margin-bottom: 14px; }
+  .tldr p {
+    font-family: var(--serif);
+    font-size: clamp(22px, 2.2vw, 28px);
+    line-height: 1.35;
+    color: var(--text);
+    margin: 0;
+    letter-spacing: -0.005em;
+    max-width: 42ch;
+  }
+  .tldr p em { font-style: italic; color: var(--accent); }
+
+  /* Bullet list */
+  .bl {
+    list-style: none;
+    padding: 0;
+    margin: 28px 0 0;
+    max-width: 65ch;
+    border-top: 1px solid var(--line-soft);
+  }
+  .bl li {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--text);
+  }
+  .bl li .idx {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    padding-top: 3px;
+  }
+
+  /* Callout */
+  .callout {
+    margin: 36px 0 0;
+    padding: 28px 32px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-card);
+    max-width: 65ch;
+  }
+  .callout .cl-label { margin-bottom: 12px; }
+  .callout p {
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.4;
+    margin: 0;
+    color: var(--text);
+    letter-spacing: -0.005em;
+  }
+  .callout p .accent { color: var(--accent); font-style: italic; }
+
+  /* Image slot (placeholder) */
+  .figure {
+    margin: 40px 0 12px;
+    max-width: 920px; /* breaks out of reading column */
+  }
+  .figure-frame {
+    background:
+      linear-gradient(135deg, #2C3A23 0%, #1F2A19 100%);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    aspect-ratio: 16 / 9;
+    position: relative;
+    overflow: hidden;
+  }
+  .figure-frame::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, transparent 0 10px, rgba(212,167,44,0.035) 10px 11px);
+  }
+  .figure-frame .fig-mark {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    font-family: var(--serif); font-style: italic; font-size: 44px; color: var(--accent-dim);
+    letter-spacing: -0.01em;
+  }
+  .figure-frame .fig-corner {
+    position: absolute; top: 14px; left: 16px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .figure-cap {
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  /* Code block */
+  .code {
+    margin: 32px 0 0;
+    background: var(--bg-inset);
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    padding: 22px 24px;
+    overflow-x: auto;
+    max-width: 780px;
+  }
+  .code .code-label {
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .code pre {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .code .tok-k { color: var(--accent); }
+  .code .tok-s { color: #B9C2A5; }
+  .code .tok-c { color: var(--text-dim); font-style: italic; }
+  .code .tok-v { color: var(--text-mid); }
+
+  /* Two-column before/after */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 36px;
+    max-width: 920px;
+  }
+  .compare-col {
+    padding: 24px;
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    background: var(--bg-card);
+  }
+  .compare-col.after { border-color: var(--accent-dim); background: color-mix(in oklab, var(--accent) 4%, var(--bg-card)); }
+  .compare-col .cc-label { margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+  .compare-col .cc-body {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.45;
+    color: var(--text);
+  }
+  .compare-col .cc-body em { font-style: italic; color: var(--accent); }
+  @media (max-width: 720px) { .compare { grid-template-columns: 1fr; } }
+
+  /* Chart block */
+  .chart-wrap {
+    margin: 36px 0 0;
+    max-width: 920px;
+    padding: 28px 28px 20px;
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    background: var(--bg-card);
+  }
+  .chart-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 22px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .chart-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    letter-spacing: -0.005em;
+  }
+  .chart-legend { display:flex; gap: 18px; font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; }
+  .chart-legend .sw { display:inline-block; width:10px; height:10px; border-radius: 2px; margin-right:8px; vertical-align: -1px; }
+  .chart svg { display:block; width: 100%; height: auto; }
+
+  /* ————— related work ————— */
+  .related {
+    padding-top: clamp(80px, 12vh, 120px);
+    border-top: 1px solid var(--line-soft);
+    margin-top: clamp(64px, 10vh, 96px);
+  }
+  .related-head {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 48px;
+    align-items: baseline;
+    margin-bottom: 32px;
+  }
+  .related-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .r-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line-soft);
+    border-radius: 12px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: 220px;
+    transition: border-color 200ms ease, background 200ms ease, transform 200ms ease;
+  }
+  .r-card:hover { border-color: var(--accent-dim); background: var(--bg-raised); }
+  .r-card .r-cat { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); }
+  .r-card .r-title { font-family: var(--serif); font-size: clamp(28px, 3vw, 36px); letter-spacing: -0.01em; line-height: 1; margin: 0; }
+  .r-card .r-desc { font-size: 14.5px; color: var(--text-mid); margin: 0; max-width: 40ch; line-height: 1.55; }
+  .r-card .r-link { margin-top: auto; font-size: 13px; color: var(--text); display: inline-flex; align-items: center; gap: 8px; }
+  .r-card:hover .r-link { color: var(--accent); }
+  .r-card .r-link .arrow { transition: transform 180ms ease; }
+  .r-card:hover .r-link .arrow { transform: translateX(3px); }
+  @media (max-width: 720px) { .related-grid { grid-template-columns: 1fr; } .related-head { grid-template-columns: 1fr; gap: 12px; } }
+
+  /* ————— footer CTA ————— */
+  .footer {
+    padding-top: clamp(96px, 14vh, 160px);
+    padding-bottom: 48px;
+    border-top: 1px solid var(--line-soft);
+    margin-top: clamp(64px, 10vh, 96px);
+  }
+  .closer {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(52px, 9vw, 120px);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    margin: 0 0 56px;
+    color: var(--text);
+    max-width: 14ch;
+  }
+  .closer .end { color: var(--accent); }
+  .footer-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .footer-link {
+    padding: 28px 0;
+    border-right: 1px solid var(--line-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-right: 20px;
+    transition: background 180ms ease;
+  }
+  .footer-link:not(:first-child) { padding-left: 24px; }
+  .footer-link:last-child { border-right: 0; }
+  .footer-link:hover { background: color-mix(in oklab, var(--accent) 4%, transparent); }
+  .footer-link:hover .footer-link-label { color: var(--accent); }
+  .footer-link-label { font-family: var(--serif); font-size: clamp(24px, 2.6vw, 32px); letter-spacing: -0.01em; color: var(--text); white-space: nowrap; transition: color 180ms ease; }
+  .footer-link-meta { font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+  .footer-small {
+    margin-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .footer-small-links { display: flex; gap: 28px; white-space: nowrap; }
+  .footer-small-links a:hover { color: var(--accent); }
+  .footer-copy { color: var(--text-faint); white-space: nowrap; }
+  @media (max-width: 720px) {
+    .footer-links { grid-template-columns: 1fr; }
+    .footer-link { border-right: 0; border-bottom: 1px solid var(--line-soft); padding-left: 0 !important; padding-right: 0; }
+    .footer-link:last-child { border-bottom: 0; }
+  }
+
+  /* scroll reveal */
+  .reveal { opacity: 0; transition: opacity 720ms cubic-bezier(.2,.6,.2,1); transition-delay: var(--reveal-delay, 0ms); }
+  .reveal.is-in { opacity: 1; }
+  .reveals-off .reveal { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transition: none; } }
+
+</style>
+</head>
+<body>
+
+<!-- nav (matches homepage) -->
+<header class="nav" id="nav">
+  <div class="shell nav-inner">
+    <a href="Portfolio.html" class="nav-mark">
+      <span class="mark-dot"></span>
+      <span>Hari Rajashekar</span>
+    </a>
+    <nav class="nav-links">
+      <a href="Portfolio.html#work">Work</a>
+      <a href="Portfolio.html#about">About</a>
+      <a href="Portfolio.html#contact">Contact</a>
+      <a href="Portfolio.html#contact" class="nav-cta">Book a call</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- breadcrumb -->
+  <div class="shell crumb">
+    <a href="Portfolio.html">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M12 7H2M6 3L2 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      All work
+    </a>
+  </div>
+
+  <!-- ————— HEADER BLOCK ————— -->
+  <section class="shell header-block" data-screen-label="01 Header">
+    <div class="frame">
+      <div class="margin-num">(00)</div>
+      <div class="col">
+        <div class="label header-label reveal">
+          <span class="dot"></span> Case study · 03
+        </div>
+
+        <h1 class="header-title reveal" style="--reveal-delay: 60ms;">LinkedIn <span style="font-style: italic;">Engine</span></h1>
+
+        <p class="header-sub reveal" style="--reveal-delay: 120ms;">
+          A self-hosted Next.js app for posting on LinkedIn <span class="em">without</span> opening LinkedIn.
+        </p>
+
+        <div class="header-meta reveal" style="--reveal-delay: 180ms;">
+          <span class="k">Role</span>&nbsp; Personal tool
+          <span class="sep">·</span>
+          <span class="k">Timeline</span>&nbsp; 3 weekends
+          <span class="sep">·</span>
+          <span class="k">Stack</span>&nbsp; Next.js, Turso, Gemini, Vercel Blob
+        </div>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— METRICS STRIP ————— -->
+  <section class="shell" data-screen-label="02 Metrics">
+    <div class="metrics reveal">
+      <div class="metric">
+        <div class="metric-v">3</div>
+        <div class="metric-k">Weekends to v1</div>
+      </div>
+      <div class="metric">
+        <div class="metric-v"><span class="accent">$</span>0</div>
+        <div class="metric-k">Monthly hosting cost</div>
+      </div>
+      <div class="metric">
+        <div class="metric-v">1</div>
+        <div class="metric-k">LinkedIn tab I no longer open</div>
+      </div>
+      <div class="metric">
+        <div class="metric-v">100<span style="font-size: 0.6em; color: var(--text-dim);">%</span></div>
+        <div class="metric-k">Self-hosted</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ————— TL;DR ————— -->
+  <section class="shell section" data-screen-label="03 TLDR">
+    <div class="frame">
+      <div class="margin-num">(01)</div>
+      <div class="col">
+        <div class="tldr reveal">
+          <div class="label tldr-label">TL;DR</div>
+          <p>
+            I don't like LinkedIn. I like that it drives inbound for my work, but I don't like being on it. So I built a small Next.js app that lets me write, schedule, and post to LinkedIn <em>without ever opening the site</em>. Three weekends, self-hosted, free to run.
+          </p>
+        </div>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— THE PROBLEM ————— -->
+  <section class="shell section" data-screen-label="04 Problem">
+    <div class="frame">
+      <div class="margin-num">(02)</div>
+      <div class="col prose">
+        <h2 class="h2 reveal">The <span class="it">problem</span>.</h2>
+        <p class="reveal">
+          LinkedIn is the highest-leverage channel for what I do. People hire me because they saw a post. The problem is that posting on LinkedIn means being on LinkedIn, and being on LinkedIn means scrolling LinkedIn. The algorithm is designed to keep you there. Every time I went to write a post, I'd lose 30 minutes to the feed <em>before I'd written a word</em>.
+        </p>
+        <p class="reveal">
+          The other LinkedIn tools out there are either expensive, or they're SaaS products that own your content, or they need browser extensions that break every other week. I wanted something I owned, that ran locally, that I could change whenever I wanted.
+        </p>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— CONSTRAINTS ————— -->
+  <section class="shell section" data-screen-label="05 Constraints">
+    <div class="frame">
+      <div class="margin-num">(03)</div>
+      <div class="col prose">
+        <h2 class="h2 reveal">Constraints.</h2>
+        <p class="reveal">Three rules going in:</p>
+        <ul class="bl reveal">
+          <li><span class="idx">01</span><span><strong style="font-weight: 500;">Free to run.</strong> &nbsp;No monthly subscriptions to anything.</span></li>
+          <li><span class="idx">02</span><span><strong style="font-weight: 500;">Self-hosted.</strong> &nbsp;No third-party SaaS storing my drafts.</span></li>
+          <li><span class="idx">03</span><span><strong style="font-weight: 500;">Single command to deploy.</strong> &nbsp;If updating the app takes more than 30 seconds, I'll stop using it.</span></li>
+        </ul>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— WHAT I TRIED FIRST ————— -->
+  <section class="shell section" data-screen-label="06 Tried first">
+    <div class="frame">
+      <div class="margin-num">(04)</div>
+      <div class="col prose">
+        <h2 class="h2 reveal">What I tried <span class="it">first</span>.</h2>
+        <p class="reveal">
+          Started with the official LinkedIn API. That ended fast. The official API only lets you post to your own profile if you're an approved partner, which I'm not. The app review process is opaque and slow.
+        </p>
+        <p class="reveal">
+          Tried a couple of community libraries. They worked, but they relied on session cookies that expired every few days. <em>I wasn't interested in re-authenticating constantly.</em>
+        </p>
+        <p class="reveal">
+          Eventually settled on a different approach: don't try to fully automate the post. Let the app do everything except the final click. The app drafts, formats, and queues posts. It generates an image if I want one. It opens LinkedIn pre-filled. I hit publish. <em>Total time on LinkedIn: about 8 seconds.</em>
+        </p>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— WHAT ACTUALLY WORKED ————— -->
+  <section class="shell section" data-screen-label="07 What worked">
+    <div class="frame">
+      <div class="margin-num">(05)</div>
+      <div class="col prose">
+        <h2 class="h2 reveal">What <span class="it">actually</span> worked.</h2>
+        <p class="reveal">
+          The stack is small and weirdly satisfying:
+        </p>
+        <ul class="bl reveal">
+          <li><span class="idx">A</span><span><strong style="font-weight: 500;">Next.js.</strong> &nbsp;The app itself.</span></li>
+          <li><span class="idx">B</span><span><strong style="font-weight: 500;">Turso.</strong> &nbsp;SQLite database for drafts, scheduled posts, image refs.</span></li>
+          <li><span class="idx">C</span><span><strong style="font-weight: 500;">Gemini.</strong> &nbsp;Image generation — cheaper than DALL·E for what I need.</span></li>
+          <li><span class="idx">D</span><span><strong style="font-weight: 500;">Vercel Blob.</strong> &nbsp;Image storage.</span></li>
+          <li><span class="idx">E</span><span><strong style="font-weight: 500;">Vercel.</strong> &nbsp;Hosting the app itself.</span></li>
+        </ul>
+        <p class="reveal" style="margin-top: 2em;">
+          Everything sits on free tiers. Combined monthly cost is zero unless I go nuts with image generation, in which case it's a few cents.
+        </p>
+
+        <figure class="figure reveal">
+          <div class="figure-frame">
+            <span class="fig-corner">Fig. 01 · app UI</span>
+            <span class="fig-mark">draft → preview → publish</span>
+          </div>
+          <figcaption class="figure-cap">01 · Draft library, LinkedIn-accurate preview, one-click open-in-LinkedIn.</figcaption>
+        </figure>
+
+        <p class="reveal">
+          The interaction model is simple. I open the app. I type or paste a draft. The app cleans up formatting, suggests a hook variation if I want one, generates an image (or I upload my own), and gives me a preview that matches LinkedIn's actual rendering. When I'm ready, I hit <em>open in LinkedIn</em> and the app opens a new tab pre-filled with the content. I publish in 8 seconds without scrolling the feed.
+        </p>
+        <p class="reveal">
+          I added a simple draft library because I'd been losing posts in my notes app for years. I added a scheduled queue because sometimes I write three posts in one sitting and don't want to publish them all at once.
+        </p>
+        <p class="reveal">
+          That's it. It's not a SaaS product. It's not for sale. It's a tool I built for me, and it works.
+        </p>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— THE NUMBERS ————— -->
+  <section class="shell section" data-screen-label="08 Numbers">
+    <div class="frame">
+      <div class="margin-num">(06)</div>
+      <div class="col prose">
+        <h2 class="h2 reveal">The <span class="it">numbers</span>.</h2>
+        <p class="reveal">
+          3 weekends to v1. $0 to host. About <em>50 posts</em> published through it so far. The real number is how much time it gave me back — I used to lose 30 minutes per post to the feed. Now I lose 8 seconds. Multiply by a few posts a week and the math is obvious.
+        </p>
+
+        <div class="chart-wrap reveal">
+          <div class="chart-head">
+            <div class="chart-title">Time on LinkedIn, per post</div>
+            <div class="chart-legend">
+              <span><span class="sw" style="background: var(--text-faint);"></span>Before</span>
+              <span><span class="sw" style="background: var(--accent);"></span>After</span>
+            </div>
+          </div>
+          <div class="chart">
+            <svg viewBox="0 0 640 220" role="img" aria-label="Time on LinkedIn per post, before vs after">
+              <!-- gridlines -->
+              <g stroke="#283220" stroke-width="1">
+                <line x1="60" y1="40" x2="620" y2="40"/>
+                <line x1="60" y1="95" x2="620" y2="95"/>
+                <line x1="60" y1="150" x2="620" y2="150"/>
+              </g>
+              <!-- y labels -->
+              <g font-family="JetBrains Mono, monospace" font-size="10" fill="#7D7C68">
+                <text x="50" y="44" text-anchor="end">30m</text>
+                <text x="50" y="99" text-anchor="end">15m</text>
+                <text x="50" y="154" text-anchor="end">0</text>
+              </g>
+
+              <!-- Bars: before = full 30min bar; after = near-zero sliver -->
+              <!-- scale: 30m bar from y=40 to y=150 (110px). 1min = ~3.67px -->
+              <g>
+                <rect x="140" y="40" width="140" height="110" rx="2" fill="#525442"/>
+                <rect x="360" y="148" width="140" height="2.5" rx="1.25" fill="#D4A72C"/>
+              </g>
+              <g font-family="Instrument Serif, serif" font-size="26" fill="#EDE6DA" font-style="italic">
+                <text x="210" y="32" text-anchor="middle">30 min</text>
+                <text x="430" y="138" text-anchor="middle" fill="#D4A72C">8 sec</text>
+              </g>
+              <g font-family="JetBrains Mono, monospace" font-size="11" fill="#B4B29E" letter-spacing="1">
+                <text x="210" y="180" text-anchor="middle">BEFORE</text>
+                <text x="430" y="180" text-anchor="middle" fill="#D4A72C">AFTER</text>
+              </g>
+              <g font-family="DM Sans, sans-serif" font-size="11" fill="#7D7C68">
+                <text x="210" y="198" text-anchor="middle">Scroll first, write later</text>
+                <text x="430" y="198" text-anchor="middle">Open-in-LinkedIn, publish, close</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— WHAT I'D DO DIFFERENTLY ————— -->
+  <section class="shell section section-last" data-screen-label="09 Differently">
+    <div class="frame">
+      <div class="margin-num">(07)</div>
+      <div class="col prose">
+        <h2 class="h2 reveal">What I'd do <span class="it">differently</span>.</h2>
+        <ul class="bl reveal">
+          <li><span class="idx">01</span><span>Build the draft library before the publishing flow. I built them in the wrong order and ended up rewriting the data model.</span></li>
+          <li><span class="idx">02</span><span>Skip the image generation feature for v1. I added it because I thought I'd want it. I use it maybe 1 in 10 posts. Should have shipped without it and added it when I actually missed it.</span></li>
+        </ul>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <!-- ————— RELATED WORK ————— -->
+  <section class="shell related" data-screen-label="10 Related">
+    <div class="related-head reveal">
+      <div class="label">(08) &nbsp; Related work</div>
+      <div class="label">Other case studies</div>
+    </div>
+    <div class="related-grid">
+      <a href="Case Study - Channel Fusion.html" class="r-card reveal">
+        <div class="r-cat">B2B outbound · Case study 01</div>
+        <h3 class="r-title">Channel Fusion</h3>
+        <p class="r-desc">$600K pipeline for an IT MSP in 90 days. Human-written templates, LLM only fills variables.</p>
+        <span class="r-link">Read breakdown
+          <svg class="arrow" width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+      <a href="Case Study - Barky AI.html" class="r-card reveal" style="--reveal-delay: 80ms;">
+        <div class="r-cat">Voice AI · Case study 02</div>
+        <h3 class="r-title">Barky AI</h3>
+        <p class="r-desc">Voice agent for home service businesses. 23 demos from 100 cold calls.</p>
+        <span class="r-link">Read breakdown
+          <svg class="arrow" width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ————— FOOTER CTA ————— -->
+  <footer class="shell footer" id="contact" data-screen-label="11 Contact">
+    <h2 class="closer reveal">
+      Working on<br/>something<br/>similar<span class="end">?</span>
+    </h2>
+
+    <div class="footer-links reveal" style="--reveal-delay: 80ms;">
+      <a class="footer-link" href="https://cal.com/hari" target="_blank" rel="noopener">
+        <span class="footer-link-label">Book a call</span>
+        <span class="footer-link-meta">Cal.com ↗</span>
+      </a>
+      <a class="footer-link" href="/cdn-cgi/l/email-protection#1c747d6e755c79647d716c7079327f7371">
+        <span class="footer-link-label">Email</span>
+        <span class="footer-link-meta">Mail ↗</span>
+      </a>
+      <a class="footer-link" href="#" target="_blank" rel="noopener">
+        <span class="footer-link-label">LinkedIn</span>
+        <span class="footer-link-meta">Profile ↗</span>
+      </a>
+    </div>
+
+    <div class="footer-small">
+      <div class="footer-small-links">
+        <a href="#">GitHub</a>
+        <a href="#">Resume PDF</a>
+      </div>
+      <div class="footer-copy">© 2026 Hari Rajashekar</div>
+    </div>
+  </footer>
+
+</main>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // sticky nav hairline
+  (function(){
+    const nav = document.getElementById('nav');
+    const onScroll = () => { if (window.scrollY > 8) nav.classList.add('is-stuck'); else nav.classList.remove('is-stuck'); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+  // reveals — scroll-driven, robust
+  (function(){
+    const els = Array.from(document.querySelectorAll('.reveal'));
+    let active = els.slice();
+    function check() {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      active = active.filter(e => {
+        const r = e.getBoundingClientRect();
+        if (r.top < vh * 1.05 && r.bottom > -50) {
+          e.classList.add('is-in');
+          return false;
+        }
+        return true;
+      });
+    }
+    requestAnimationFrame(check);
+    setTimeout(check, 100);
+    // hard failsafe — always fires regardless
+    setTimeout(() => { document.documentElement.classList.add('reveals-off'); }, 1500);
+    let raf = null;
+    function onScroll() {
+      if (raf) return;
+      raf = requestAnimationFrame(() => { raf = null; check(); });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+  })();
+</script>
+
+</body>
+</html>
